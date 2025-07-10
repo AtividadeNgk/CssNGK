@@ -86,7 +86,7 @@ async def planos_deletar(update: Update, context: CallbackContext):
 
 async def plano_nome(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if not update.message.text:
-        await update.message.reply_text(text=f"⛔ Formato de mídia inválido, por favor envie apenas textos")
+        await update.message.reply_text(text=f"⛔ Formato inválido. Por favor, envie apenas textos")
         return PLANOS_NOME
     
     keyboard = [
@@ -99,7 +99,7 @@ async def plano_nome(update: Update, context: ContextTypes.DEFAULT_TYPE):
     ]
     reply_markup = InlineKeyboardMarkup(keyboard)
     context.user_data['plan_context']['name'] = update.message.text
-    await update.message.reply_text("⏳ Qual a unidade de tempo do seu plano?", reply_markup=reply_markup)
+    await update.message.reply_text("⏳ Escolha a unidade de tempo do seu plano.", reply_markup=reply_markup)
     return PLANOS_TEMPO_TIPO
 
 async def plano_tempo_tipo(update: Update, context: CallbackContext):
@@ -123,13 +123,13 @@ async def plano_tempo_tipo(update: Update, context: CallbackContext):
             'mes':'meses',
             'ano':'anos'
         }
-        await query.message.edit_text(f"💎 Envie o numero de {names[context.user_data['plan_context']['time_type']]} deseja para o plano", reply_markup=reply_markup)
+        await query.message.edit_text(f"⌛️ Quantos {names[context.user_data['plan_context']['time_type']]} terá o seu plano?", reply_markup=reply_markup)
         return PLANOS_TEMPO
 
 
 async def plano_tempo(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if not update.message.text:
-        await update.message.reply_text(text=f"⛔ Formato de mídia inválido, por favor envie apenas textos")
+        await update.message.reply_text(text=f"⛔ Formato inválido. Por favor, envie apenas números")
         return PLANOS_TEMPO
     try:
         keyboard = [[InlineKeyboardButton("❌ CANCELAR", callback_data="cancelar")]]
@@ -148,7 +148,7 @@ async def plano_tempo(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 async def plano_valor(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if not update.message.text:
-        await update.message.reply_text(text=f"⛔ Formato de mídia inválido, por favor envie apenas textos")
+        await update.message.reply_text(text=f"⛔ Formato inválido. Por favor, envie apenas números")
         return PLANOS_VALOR
     try:
         keyboard = [[InlineKeyboardButton("✅ Confirmar", callback_data="confirmar")],
