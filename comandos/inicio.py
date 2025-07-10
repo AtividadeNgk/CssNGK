@@ -87,9 +87,6 @@ async def inicio_adicionar_ou_deletar(update: Update, context: CallbackContext):
             context.user_data['conv_state'] = False
             return ConversationHandler.END
 
-
-
-
         context.user_data['inicio_context'][acao] = False
         await query.message.edit_text(f"✅ {acao.capitalize()} foi deletado com sucesso.")
         manager.update_bot_config(context.bot_data['id'], context.user_data['inicio_context'])
@@ -102,7 +99,7 @@ async def inicio_adicionar_ou_deletar(update: Update, context: CallbackContext):
         reply_markup = InlineKeyboardMarkup(keyboard)
 
         if acao == "midia":
-            await query.message.edit_text("🎥 Envie a mídia inicial.", reply_markup=reply_markup)
+            await query.message.edit_text("🎬 Envie a mídia inicial.", reply_markup=reply_markup)
         elif acao in ["texto1", "texto2"]:
             await query.message.edit_text(f"📝 Envie o novo valor para {acao.capitalize()}.", reply_markup=reply_markup)
         elif acao == "botao":
