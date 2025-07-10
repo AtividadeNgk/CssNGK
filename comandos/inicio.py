@@ -25,8 +25,8 @@ async def inicio(update: Update, context: ContextTypes.DEFAULT_TYPE):
         return ConversationHandler.END
 
     if not await is_admin(context, update.message.from_user.id):
-        
         return ConversationHandler.END
+    
     context.user_data['inicio_context'] = manager.get_bot_config(context.bot_data['id'])
     context.user_data['conv_state'] = "inicio"
 
@@ -38,7 +38,7 @@ async def inicio(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     reply_markup = InlineKeyboardMarkup(keyboard)
 
-    await update.message.reply_text("🛠️ O que deseja modificar no inicio?", reply_markup=reply_markup)
+    await update.message.reply_text("<b>📱 O que deseja modificar no início?</b>", reply_markup=reply_markup, parse_mode='HTML')
     return INICIO_ESCOLHA
 
 async def inicio_escolha(update: Update, context: CallbackContext):
