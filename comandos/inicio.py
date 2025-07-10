@@ -60,11 +60,11 @@ async def inicio_escolha(update: Update, context: CallbackContext):
 
     # Texto específico para mídia inicial
     if query.data == 'midia':
-        texto = "<b>📱 Deseja adicionar ou remover a mídia inicial?</b>"
+        texto = "🎬 Deseja adicionar ou remover a mídia inicial?"
     else:
         texto = f"🛠️ Deseja adicionar ou deletar o valor para {query.data}?"
     
-    await query.message.edit_text(texto, reply_markup=reply_markup, parse_mode='HTML')
+    await query.message.edit_text(texto, reply_markup=reply_markup)
     return INICIO_ADICIONAR_OU_DELETAR
 
 async def inicio_adicionar_ou_deletar(update: Update, context: CallbackContext):
