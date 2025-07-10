@@ -52,13 +52,19 @@ async def inicio_escolha(update: Update, context: CallbackContext):
     context.user_data['inicio_acao'] = query.data
 
     keyboard = [
-        [InlineKeyboardButton("➕ Adicionar", callback_data="adicionar"), InlineKeyboardButton("➖ Deletar", callback_data="deletar")],
+        [InlineKeyboardButton("Adicionar", callback_data="adicionar"), InlineKeyboardButton("Remover", callback_data="deletar")],
         [InlineKeyboardButton("❌ CANCELAR", callback_data="cancelar")]
     ]
 
     reply_markup = InlineKeyboardMarkup(keyboard)
 
-    await query.message.edit_text(f"🛠️ Deseja adicionar ou deletar o valor para {query.data}?", reply_markup=reply_markup)
+    # Texto específico para mídia inicial
+    if query.data == 'midia':
+        texto = "<b>📱 Deseja adicionar ou remover a mídia inicial?</b>"
+    else:
+        texto = f"🛠️ Deseja adicionar ou deletar o valor para {query.data}?"
+    
+    await query.message.edit_text(texto, reply_markup=reply_markup, parse_mode='HTML')
     return INICIO_ADICIONAR_OU_DELETAR
 
 async def inicio_adicionar_ou_deletar(update: Update, context: CallbackContext):
