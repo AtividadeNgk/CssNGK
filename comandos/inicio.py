@@ -88,7 +88,13 @@ async def inicio_adicionar_ou_deletar(update: Update, context: CallbackContext):
             return ConversationHandler.END
 
         context.user_data['inicio_context'][acao] = False
-        await query.message.edit_text(f"✅ {acao.capitalize()} foi deletado com sucesso.")
+        
+        # Mensagem personalizada para mídia
+        if acao == 'midia':
+            await query.message.edit_text("✅ Mídia inicial removida com sucesso.")
+        else:
+            await query.message.edit_text(f"✅ {acao.capitalize()} foi deletado com sucesso.")
+            
         manager.update_bot_config(context.bot_data['id'], context.user_data['inicio_context'])
         
         context.user_data['conv_state'] = False
