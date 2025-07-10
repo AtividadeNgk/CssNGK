@@ -53,7 +53,7 @@ async def planos_escolha(update: Update, context: CallbackContext):
             'time_type':False,
             'time':False
             }
-        await query.message.edit_text("💎 Envie o nome do plano:", reply_markup=reply_markup)
+        await query.message.edit_text("📝 Envie o nome do plano.", reply_markup=reply_markup)
         return PLANOS_NOME
     elif query.data == 'remover':
         planos = manager.get_bot_plans(context.bot_data['id'])
@@ -86,19 +86,20 @@ async def planos_deletar(update: Update, context: CallbackContext):
 
 async def plano_nome(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if not update.message.text:
-        await update.message.reply_text(text=f"⛔ Formato de midia invalido, por favor envie apenas textos")
+        await update.message.reply_text(text=f"⛔ Formato de mídia inválido, por favor envie apenas textos")
         return PLANOS_NOME
+    
     keyboard = [
         [InlineKeyboardButton(f"Dias", callback_data='unidade_dia')],
         [InlineKeyboardButton(f"Semanas", callback_data='unidade_semana')],
         [InlineKeyboardButton(f"Meses", callback_data='unidade_mes')],
         [InlineKeyboardButton(f"Anos", callback_data='unidade_ano')],
-        [InlineKeyboardButton(f"Vitalicio", callback_data='unidade_eterno')],
-        [InlineKeyboardButton('Cancelar', callback_data='cancelar')]
+        [InlineKeyboardButton(f"Vitalício", callback_data='unidade_eterno')],
+        [InlineKeyboardButton('❌ CANCELAR', callback_data='cancelar')]
     ]
     reply_markup = InlineKeyboardMarkup(keyboard)
     context.user_data['plan_context']['name'] = update.message.text
-    await update.message.reply_text("💎 Escolha abaixo a unidade de tempo do seu plano\:\n>Exemplo\: Semanas \- 3 Semanas\(O numero sera inserido a seguir\)", reply_markup=reply_markup, parse_mode='MarkdownV2')
+    await update.message.reply_text("⏳ Escolha a unidade de tempo do seu plano.", reply_markup=reply_markup)
     return PLANOS_TEMPO_TIPO
 
 async def plano_tempo_tipo(update: Update, context: CallbackContext):
@@ -128,40 +129,37 @@ async def plano_tempo_tipo(update: Update, context: CallbackContext):
 
 async def plano_tempo(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if not update.message.text:
-        await update.message.reply_text(text=f"⛔ Formato de midia invalido, por favor envie apenas textos")
+        await update.message.reply_text(text=f"⛔ Formato de mídia inválido, por favor envie apenas textos")
         return PLANOS_TEMPO
     try:
         keyboard = [[InlineKeyboardButton("❌ CANCELAR", callback_data="cancelar")]]
         reply_markup = InlineKeyboardMarkup(keyboard)
         tempo = int(update.message.text)
         if tempo < 0:
-        
             await update.message.reply_text("⛔ O tempo deve ser positivo:", reply_markup=reply_markup)
             return PLANOS_TEMPO
         
-
         context.user_data['plan_context']['time'] = tempo
-        await update.message.reply_text("💎 Envie o valor que deseja para o plano:", reply_markup=reply_markup)
+        await update.message.reply_text("💰 Envie o valor do plano.", reply_markup=reply_markup)
         return PLANOS_VALOR
     except:
-        await update.message.reply_text("⛔ Envie um tempo valido:", reply_markup=reply_markup)
+        await update.message.reply_text("⛔ Envie um tempo válido:", reply_markup=reply_markup)
         return PLANOS_TEMPO
 
 async def plano_valor(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if not update.message.text:
-        await update.message.reply_text(text=f"⛔ Formato de midia invalido, por favor envie apenas textos")
+        await update.message.reply_text(text=f"⛔ Formato de mídia inválido, por favor envie apenas textos")
         return PLANOS_VALOR
     try:
         keyboard = [[InlineKeyboardButton("✅ Confirmar", callback_data="confirmar")],
             [InlineKeyboardButton("❌ CANCELAR", callback_data="cancelar")]]
-
 
         keyboard2 = [[InlineKeyboardButton("❌ CANCELAR", callback_data="cancelar")]]
         reply_markup = InlineKeyboardMarkup(keyboard)
         reply_markup2 = InlineKeyboardMarkup(keyboard2)
         valor = float(update.message.text.replace(',','.'))
         if valor < 4:
-            await update.message.reply_text("⛔ O valor deve ser positivo e maior que 4: ", reply_markup=reply_markup2)
+            await update.message.reply_text("⛔ O valor deve ser positivo e maior que 4:", reply_markup=reply_markup2)
             return PLANOS_VALOR
         
         names = {
@@ -175,22 +173,22 @@ async def plano_valor(update: Update, context: ContextTypes.DEFAULT_TYPE):
             names = {
             'dia':'dia',
             'semana':'semana',
-            'mes':'mes',
+            'mes':'mês',
             'ano':'ano'
         }
         context.user_data['plan_context']['value'] = valor
         
         print(context.user_data['plan_context'])
         if plano['time_type'] == 'eterno':
-            await update.message.reply_text(f"Plano selecionado com sucesso\.\n\n>• Título\: {escape_markdown_v2(plano['name'])}\n>• Duração\: Vitalicio\n>• Valor\: R\$ {escape_markdown_v2(str(valor))}", reply_markup=reply_markup, parse_mode='MarkdownV2')
+            await update.message.reply_text(f"Plano selecionado com sucesso\.\n\n>• Título\: {escape_markdown_v2(plano['name'])}\n>• Duração\: Vitalício\n>• Valor\: R\$ {escape_markdown_v2(str(valor))}", reply_markup=reply_markup, parse_mode='MarkdownV2')
         else: 
             await update.message.reply_text(f"Plano selecionado com sucesso\.\n\n>• Título\: {escape_markdown_v2(plano['name'])}\n>• Duração\: {plano['time']} {names[plano['time_type']]}\n>• Valor\: R\$ {escape_markdown_v2(str(valor))}", reply_markup=reply_markup, parse_mode='MarkdownV2')
         return PLANOS_CONFIRMAR
     except Exception as e:
         print(e)
-        await update.message.reply_text("⛔ Envie um valor numerico valido:")
+        await update.message.reply_text("❌ Envie um valor numérico válido. Exemplo: 24.90", reply_markup=reply_markup2)
         return PLANOS_VALOR
-
+        
 async def plano_confirmar(update: Update, context: CallbackContext):
     query = update.callback_query
     await query.answer()
