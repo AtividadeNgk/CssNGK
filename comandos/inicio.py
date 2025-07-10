@@ -51,6 +51,13 @@ async def inicio_escolha(update: Update, context: CallbackContext):
 
     context.user_data['inicio_acao'] = query.data
 
+    # Se for botão, vai direto para receber o texto
+    if query.data == 'botao':
+        keyboard = [[InlineKeyboardButton("❌ CANCELAR", callback_data="cancelar")]]
+        reply_markup = InlineKeyboardMarkup(keyboard)
+        await query.message.edit_text("🕹 Envie o texto para o botão inicial", reply_markup=reply_markup)
+        return INICIO_RECEBER
+
     keyboard = [
         [InlineKeyboardButton("Adicionar", callback_data="adicionar"), InlineKeyboardButton("Remover", callback_data="deletar")],
         [InlineKeyboardButton("❌ CANCELAR", callback_data="cancelar")]
@@ -58,9 +65,13 @@ async def inicio_escolha(update: Update, context: CallbackContext):
 
     reply_markup = InlineKeyboardMarkup(keyboard)
 
-    # Texto específico para mídia inicial
+    # Textos específicos para cada opção
     if query.data == 'midia':
         texto = "🎬 Deseja adicionar ou remover a mídia inicial?"
+    elif query.data == 'texto1':
+        texto = "📝 Deseja adicionar ou remover o Texto 1?"
+    elif query.data == 'texto2':
+        texto = "📝 Deseja adicionar ou remover o Texto 2?"
     else:
         texto = f"🛠️ Deseja adicionar ou deletar o valor para {query.data}?"
     
@@ -77,21 +88,26 @@ async def inicio_adicionar_ou_deletar(update: Update, context: CallbackContext):
         return ConversationHandler.END
 
     if query.data == 'deletar':
-
-        if acao == 'texto2':
-            await query.message.edit_text(f"⛔ Não e possivel deletar o texto 2.")
+        # Verifica se o texto já foi definido
+        if acao == 'texto2' and not context.user_data['inicio_context'].get('texto2'):
+            await query.message.edit_text("❌ Não é possível deletar o Texto 2, pois o mesmo ainda não foi definido.")
             context.user_data['conv_state'] = False
             return ConversationHandler.END
-        if acao == 'botao':
-            await query.message.edit_text(f"⛔ Não e possivel deletar o botão.")
+            
+        if acao == 'texto1' and not context.user_data['inicio_context'].get('texto1'):
+            await query.message.edit_text("❌ Não é possível deletar o Texto 1, pois o mesmo ainda não foi definido.")
             context.user_data['conv_state'] = False
             return ConversationHandler.END
 
         context.user_data['inicio_context'][acao] = False
         
-        # Mensagem personalizada para mídia
+        # Mensagens personalizadas para remoção
         if acao == 'midia':
             await query.message.edit_text("✅ Mídia inicial removida com sucesso.")
+        elif acao == 'texto1':
+            await query.message.edit_text("✅ Texto 1 foi removido com sucesso.")
+        elif acao == 'texto2':
+            await query.message.edit_text("✅ Texto 2 foi removido com sucesso.")
         else:
             await query.message.edit_text(f"✅ {acao.capitalize()} foi deletado com sucesso.")
             
@@ -106,10 +122,10 @@ async def inicio_adicionar_ou_deletar(update: Update, context: CallbackContext):
 
         if acao == "midia":
             await query.message.edit_text("🎬 Envie a mídia inicial.", reply_markup=reply_markup)
-        elif acao in ["texto1", "texto2"]:
-            await query.message.edit_text(f"📝 Envie o novo valor para {acao.capitalize()}.", reply_markup=reply_markup)
-        elif acao == "botao":
-            await query.message.edit_text("🔘 Envie o novo texto para o botão.", reply_markup=reply_markup)
+        elif acao == "texto1":
+            await query.message.edit_text("📝 Envie o Texto 1.", reply_markup=reply_markup)
+        elif acao == "texto2":
+            await query.message.edit_text("📝 Envie o Texto 2.", reply_markup=reply_markup)
         return INICIO_RECEBER
 
 async def inicio_receber(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -135,17 +151,21 @@ async def inicio_receber(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
         elif acao in ["texto1", "texto2"]:
             if update.message.photo or update.message.video:
-                await update.message.reply_text(f"⛔ Envie apenas texto, midia não suportada", reply_markup=cancel_markup)
+                await update.message.reply_text(f"⛔ Envie apenas texto, mídia não suportada", reply_markup=cancel_markup)
                 return INICIO_RECEBER
             context.user_data['inicio_context'][acao] = mensagem
-            await update.message.reply_text(f"✅ {acao.capitalize()} atualizado com sucesso.")
+            if acao == "texto1":
+                await update.message.reply_text("✅ Texto 1 atualizado com sucesso.")
+            else:
+                await update.message.reply_text("✅ Texto 2 atualizado com sucesso.")
             manager.update_bot_config(context.bot_data['id'], context.user_data['inicio_context'])
+            
         elif acao == "botao":
             if update.message.photo or update.message.video:
-                await update.message.reply_text(f"⛔ Envie apenas texto, midia não suportada", reply_markup=cancel_markup)
+                await update.message.reply_text(f"⛔ Envie apenas texto, mídia não suportada", reply_markup=cancel_markup)
                 return INICIO_RECEBER
             context.user_data['inicio_context']['button'] = mensagem
-            await update.message.reply_text("✅ Botão atualizado com sucesso.")
+            await update.message.reply_text("✅ Texto do botão inicial atualizado com sucesso.")
             manager.update_bot_config(context.bot_data['id'], context.user_data['inicio_context'])
 
     except Exception as e:
