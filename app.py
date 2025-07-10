@@ -533,10 +533,10 @@ async def registro_menu_callback(update: Update, context: ContextTypes.DEFAULT_T
                 "Você ainda não possui bots cadastrados no sistema. "
                 "Use o botão <b>Cadastrar Bot</b> para adicionar seu primeiro bot na NGK Pay.",
                 parse_mode='HTML',
-                reply_markup=reply_markup  # Adiciona o botão junto com o texto
+                reply_markup=reply_markup
             )
         else:
-            bot_list = "🤖 <b>Seus Bots Cadastrados:</b>\n\n"
+            bot_list = "🥷 <b>Meus bots cadastrado</b>\n\n"
             for bot in bots:
                 bot_id = bot[0]
                 bot_token = bot[1]
@@ -546,16 +546,16 @@ async def registro_menu_callback(update: Update, context: ContextTypes.DEFAULT_T
                 if bot_details and bot_details.get('result'):
                     bot_username = bot_details['result'].get('username', 'INDEFINIDO')
                     bot_name = bot_details['result'].get('first_name', 'Sem nome')
-                    bot_list += f"• <b>{bot_name}</b> - @{bot_username}\n"
+                    bot_list += f"📦 {bot_name} - @{bot_username}\n"
                 else:
-                    bot_list += f"• Bot ID: {bot_id} (Token inválido)\n"
+                    bot_list += f"📦 Bot ID: {bot_id} (Token inválido)\n"
             
             bot_list += f"\n📊 <b>Total:</b> {len(bots)} bot(s)"
             
             await query.edit_message_text(
                 bot_list, 
                 parse_mode='HTML',
-                reply_markup=reply_markup  # Adiciona o botão junto com o texto
+                reply_markup=reply_markup
             )
         
         return REGISTRO_MENU
@@ -574,7 +574,7 @@ async def registro_menu_callback(update: Update, context: ContextTypes.DEFAULT_T
                 "❌ <b>Nenhum bot para substituir</b>\n\n"
                 "Você precisa ter pelo menos um bot cadastrado para usar esta função.",
                 parse_mode='HTML',
-                reply_markup=reply_markup  # Adiciona o botão junto com o texto
+                reply_markup=reply_markup
             )
             return REGISTRO_MENU
         
@@ -599,12 +599,12 @@ async def registro_menu_callback(update: Update, context: ContextTypes.DEFAULT_T
         reply_markup = InlineKeyboardMarkup(keyboard)
         
         await query.edit_message_text(
-            "🔄 <b>Substituir Bot</b>\n\n"
-            "Selecione o bot que deseja substituir:\n\n"
-            "⚠️ <i>O bot selecionado será desativado e suas configurações "
-            "serão transferidas para o novo bot.</i>",
+            "♻️ <b>Substituir Bot</b>\n\n"
+            "⚠️ O bot selecionado será desativado e suas configurações "
+            "serão transferidas para o novo bot.\n\n"
+            "<b>Qual bot deseja substituir?</b>",
             parse_mode='HTML',
-            reply_markup=reply_markup  # Adiciona o botão junto com o texto
+            reply_markup=reply_markup
         )
         
         return REGISTRO_SELECIONAR_BOT
