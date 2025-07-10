@@ -99,7 +99,7 @@ async def plano_nome(update: Update, context: ContextTypes.DEFAULT_TYPE):
     ]
     reply_markup = InlineKeyboardMarkup(keyboard)
     context.user_data['plan_context']['name'] = update.message.text
-    await update.message.reply_text("⏳ Escolha a unidade de tempo do seu plano.", reply_markup=reply_markup)
+    await update.message.reply_text("⏳ Qual a unidade de tempo do seu plano?", reply_markup=reply_markup)
     return PLANOS_TEMPO_TIPO
 
 async def plano_tempo_tipo(update: Update, context: CallbackContext):
