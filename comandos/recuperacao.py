@@ -231,7 +231,7 @@ async def recuperacao_tempo(update: Update, context: ContextTypes.DEFAULT_TYPE):
         tempo_str = f"{tempo} {unidade}"
         
         await update.message.reply_text(
-            f"⚙️ Confirme a recuperação {rec['index'] + 1}\\:\n\n"
+            f"⚙️ Confirme a recuperação {rec['index'] + 1}\n\n"
             f">⏰ Tempo\\: {escape_markdown_v2(tempo_str)}\n"
             f">🏷️ Desconto\\: {escape_markdown_v2(str(rec['porcentagem']))}%\n"
             f">📝 Mensagem configurada",
