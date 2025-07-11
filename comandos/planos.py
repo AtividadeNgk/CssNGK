@@ -181,19 +181,21 @@ async def plano_valor(update: Update, context: ContextTypes.DEFAULT_TYPE):
         print(context.user_data['plan_context'])
         if plano['time_type'] == 'eterno':
             await update.message.reply_text(
-                f"⚙️ 𝗣𝗿𝗼𝗻𝘁𝗼 𝗽𝗮𝗿𝗮 𝗰𝗿𝗶𝗮𝗿 𝗼 𝗽𝗹𝗮𝗻𝗼? \n\n"
-                f"• Título: {plano['name']}\n"
-                f"• Duração: Vitalício\n"
-                f"• Valor: R$ {valor:.2f}",
-                reply_markup=reply_markup
+                f"⚙️ Pronto para criar o plano?\n\n"
+                f"Título: {plano['name']}\n"
+                f"Duração: Vitalício\n"
+                f"Valor: R$ {valor:.2f}",
+                reply_markup=reply_markup,
+                parse_mode='HTML'
             )
         else:
             await update.message.reply_text(
-                f"⚙️ 𝗣𝗿𝗼𝗻𝘁𝗼 𝗽𝗮𝗿𝗮 𝗰𝗿𝗶𝗮𝗿 𝗼 𝗽𝗹𝗮𝗻𝗼? \n\n"
-                f"• Título: {plano['name']}\n"
-                f"• Duração: {plano['time']} {names[plano['time_type']]}\n"
-                f"• Valor: R$ {valor:.2f}",
-                reply_markup=reply_markup
+                f"⚙️ Pronto para criar o plano?\n\n"
+                f"Título: {plano['name']}\n"
+                f"Duração: {plano['time']} {names[plano['time_type']]}\n"
+                f"Valor: R$ {valor:.2f}",
+                reply_markup=reply_markup,
+                parse_mode='HTML'
             )
         return PLANOS_CONFIRMAR
     except Exception as e:
