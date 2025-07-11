@@ -41,7 +41,7 @@ async def recuperacao(update: Update, context: ContextTypes.DEFAULT_TYPE):
     keyboard.append([InlineKeyboardButton("❌ CANCELAR", callback_data="cancelar")])
     
     reply_markup = InlineKeyboardMarkup(keyboard)
-    await update.message.reply_text("🔄 Selecione qual recuperação deseja configurar:", reply_markup=reply_markup)
+    await update.message.reply_text("🎣 Selecione qual recuperação deseja configurar", reply_markup=reply_markup)
     return RECUPERACAO_ESCOLHA
 
 async def recuperacao_escolha(update: Update, context: CallbackContext):
@@ -130,8 +130,8 @@ async def recuperacao_mensagem(update: Update, context: ContextTypes.DEFAULT_TYP
         context.user_data['recovery_context']['text'] = save['text']
         
         await update.message.reply_text(
-            "💸 Quantos % de desconto deseja aplicar nesta recuperação?\n"
-            "> Digite apenas o número (ex: 10 para 10%)",
+            "🏷 Quantos % de desconto deseja aplicar nesta recuperação?\n"
+            "Digite apenas número (Ex: 20 para 20%)",
             reply_markup=cancel_markup
         )
         return RECUPERACAO_PORCENTAGEM
@@ -165,7 +165,7 @@ async def recuperacao_porcentagem(update: Update, context: ContextTypes.DEFAULT_
         reply_markup = InlineKeyboardMarkup(keyboard)
         
         await update.message.reply_text(
-            "⏰ Selecione a unidade de tempo para o disparo:",
+            "⏰ Selecione a unidade de tempo para o disparo",
             reply_markup=reply_markup
         )
         return RECUPERACAO_UNIDADE_TEMPO
@@ -186,8 +186,8 @@ async def recuperacao_unidade_tempo(update: Update, context: CallbackContext):
     context.user_data['recovery_context']['unidade_tempo'] = unidade
     
     await query.message.edit_text(
-        f"⏰ Quantos {unidade} após o /start deseja disparar esta recuperação?\n"
-        "> Máximo permitido: 7 dias no total",
+        f"⏰ Quantos {unidade} após o cliente dar /start no bot deseja disparar esta recuperação?\n"
+        "",
         reply_markup=cancel_markup
     )
     return RECUPERACAO_TEMPO
@@ -231,11 +231,10 @@ async def recuperacao_tempo(update: Update, context: ContextTypes.DEFAULT_TYPE):
         tempo_str = f"{tempo} {unidade}"
         
         await update.message.reply_text(
-            f"📋 CONFIRME A RECUPERAÇÃO {rec['index'] + 1}:\n\n"
-            f"⏰ Tempo: {tempo_str} após /start\n"
-            f"💸 Desconto: {rec['porcentagem']}%\n"
-            f"📝 Mensagem configurada\n\n"
-            f"Deseja criar esta recuperação?",
+            f"⚙️ Confirme a recuperação {rec['index'] + 1}:\n\n"
+            f"⏰ Tempo: {tempo_str}\n"
+            f"🏷️ Desconto: {rec['porcentagem']}%\n"
+            f"📝 Mensagem configurada\n\n",
             reply_markup=reply_markup
         )
         return RECUPERACAO_CONFIRMAR
