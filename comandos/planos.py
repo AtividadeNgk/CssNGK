@@ -180,9 +180,21 @@ async def plano_valor(update: Update, context: ContextTypes.DEFAULT_TYPE):
         
         print(context.user_data['plan_context'])
         if plano['time_type'] == 'eterno':
-            await update.message.reply_text(f"Plano selecionado com sucesso\.\n\n>• Título\: {escape_markdown_v2(plano['name'])}\n>• Duração\: Vitalício\n>• Valor\: R\$ {escape_markdown_v2(str(valor))}", reply_markup=reply_markup, parse_mode='MarkdownV2')
-        else: 
-            await update.message.reply_text(f"Plano selecionado com sucesso\.\n\n>• Título\: {escape_markdown_v2(plano['name'])}\n>• Duração\: {plano['time']} {names[plano['time_type']]}\n>• Valor\: R\$ {escape_markdown_v2(str(valor))}", reply_markup=reply_markup, parse_mode='MarkdownV2')
+            await update.message.reply_text(
+                f"⚙️ 𝗣𝗿𝗼𝗻𝘁𝗼 𝗽𝗮𝗿𝗮 𝗰𝗿𝗶𝗮𝗿 𝗼 𝗽𝗹𝗮𝗻𝗼? \n\n"
+                f"• Título: {plano['name']}\n"
+                f"• Duração: Vitalício\n"
+                f"• Valor: R$ {valor:.2f}",
+                reply_markup=reply_markup
+            )
+        else:
+            await update.message.reply_text(
+                f"⚙️ 𝗣𝗿𝗼𝗻𝘁𝗼 𝗽𝗮𝗿𝗮 𝗰𝗿𝗶𝗮𝗿 𝗼 𝗽𝗹𝗮𝗻𝗼? \n\n"
+                f"• Título: {plano['name']}\n"
+                f"• Duração: {plano['time']} {names[plano['time_type']]}\n"
+                f"• Valor: R$ {valor:.2f}",
+                reply_markup=reply_markup
+            )
         return PLANOS_CONFIRMAR
     except Exception as e:
         print(e)
