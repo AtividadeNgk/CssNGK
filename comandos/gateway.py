@@ -39,13 +39,13 @@ async def gateway_escolha(update: Update, context: CallbackContext):
         await cancel(update, context)
         return ConversationHandler.END
     elif query.data == 'mp':
-        await query.message.edit_text(f"💰 Mensagem MP\n>{escape_markdown_v2(f"https://auth.mercadopago.com/authorization?client_id={config['client_id']}&response_type=code&platform_id=mp&state={context.bot_data['id']}&redirect_url={config['url']}/callback")}", parse_mode='MarkdownV2')
+        await query.message.edit_text(f"🔒 Clique no link abaixo para vincular seu mercado pago.\n\n>{escape_markdown_v2(f"https://auth.mercadopago.com/authorization?client_id={config['client_id']}&response_type=code&platform_id=mp&state={context.bot_data['id']}&redirect_url={config['url']}/callback")}", parse_mode='MarkdownV2')
         context.user_data['conv_state'] = False
         return ConversationHandler.END
     elif query.data == 'push':
         keyboard = [[InlineKeyboardButton("❌ CANCELAR", callback_data="cancelar")]]
         reply_markup = InlineKeyboardMarkup(keyboard)        
-        await query.message.edit_text("Envie o token PushinPay:", reply_markup=reply_markup)
+        await query.message.edit_text("🔒 Envie o token da PushinPay.", reply_markup=reply_markup)
         return GATEWAY_RECEBER
     
 
