@@ -130,9 +130,10 @@ async def recuperacao_mensagem(update: Update, context: ContextTypes.DEFAULT_TYP
         context.user_data['recovery_context']['text'] = save['text']
         
         await update.message.reply_text(
-            "🏷 Deseja aplicar desconto nesta recuperação?\n\n"
+            "🏷 <b>Deseja aplicar desconto nesta recuperação?</b>\n\n"
             "Digite apenas o número (Ex: 15 para 15% ou 0 se não quiser desconto)",
-            reply_markup=cancel_markup
+            reply_markup=cancel_markup,
+            parse_mode='HTML'
         )
         return RECUPERACAO_PORCENTAGEM
         
