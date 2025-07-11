@@ -26,15 +26,15 @@ async def planos(update: Update, context: ContextTypes.DEFAULT_TYPE):
     plan_list = manager.get_bot_plans(context.bot_data['id'])
     if len(plan_list) > 0:
         keyboard = [
-            [InlineKeyboardButton("➕ ADICIONAR", callback_data="adicionar"), InlineKeyboardButton("➖ REMOVER", callback_data="remover")],
+            [InlineKeyboardButton("Adicionar", callback_data="adicionar"), InlineKeyboardButton("➖ Remover", callback_data="remover")],
             [InlineKeyboardButton("❌ CANCELAR", callback_data="cancelar")]]
     else:
         keyboard = [
-            [InlineKeyboardButton("➕ ADICIONAR", callback_data="adicionar")],
+            [InlineKeyboardButton("Adicionar", callback_data="adicionar")],
             [InlineKeyboardButton("❌ CANCELAR", callback_data="cancelar")]]
     
     reply_markup = InlineKeyboardMarkup(keyboard)
-    await update.message.reply_text("💎 Qual ação deseja fazer com os planos:", reply_markup=reply_markup)
+    await update.message.reply_text("💰 O que deseja fazer com os planos?", reply_markup=reply_markup)
     return PLANOS_ESCOLHA
 
 async def planos_escolha(update: Update, context: CallbackContext):
@@ -114,7 +114,7 @@ async def plano_tempo_tipo(update: Update, context: CallbackContext):
     context.user_data['plan_context']['time_type'] = query.data.split('_')[-1]
     if query.data.split('_')[-1] == "eterno":
         context.user_data['plan_context']['time'] = 'eterno'
-        await query.message.edit_text("💎 Envie o valor que deseja para o plano", reply_markup=reply_markup)
+        await query.message.edit_text("💰 Envie o valor do plano.", reply_markup=reply_markup)
         return PLANOS_VALOR
     else:
         names = {
@@ -159,7 +159,7 @@ async def plano_valor(update: Update, context: ContextTypes.DEFAULT_TYPE):
         reply_markup2 = InlineKeyboardMarkup(keyboard2)
         valor = float(update.message.text.replace(',','.'))
         if valor < 4:
-            await update.message.reply_text("⛔ O valor deve ser positivo e maior que 4:", reply_markup=reply_markup2)
+            await update.message.reply_text("⛔️ O valor deve ser maior ou igual a R$ 4,00", reply_markup=reply_markup2)
             return PLANOS_VALOR
         
         names = {
