@@ -130,7 +130,7 @@ async def recuperacao_mensagem(update: Update, context: ContextTypes.DEFAULT_TYP
         context.user_data['recovery_context']['text'] = save['text']
         
         await update.message.reply_text(
-            "🏷 Deseja aplicar desconto nesta recuperação?\n"
+            "🏷 Deseja aplicar desconto nesta recuperação?\n\n"
             "Digite apenas o número (Ex: 15 para 15% ou 0 se não quiser desconto)",
             reply_markup=cancel_markup
         )
@@ -171,7 +171,7 @@ async def recuperacao_porcentagem(update: Update, context: ContextTypes.DEFAULT_
         return RECUPERACAO_UNIDADE_TEMPO
         
     except ValueError:
-        await update.message.reply_text("⛔ Envie um número válido:", reply_markup=cancel_markup)
+        await update.message.reply_text("⛔ Por favor, envie apenas números.", reply_markup=cancel_markup)
         return RECUPERACAO_PORCENTAGEM
 
 async def recuperacao_unidade_tempo(update: Update, context: CallbackContext):
