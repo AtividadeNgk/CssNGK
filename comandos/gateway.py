@@ -28,7 +28,6 @@ async def gateway(update: Update, context: ContextTypes.DEFAULT_TYPE):
             [InlineKeyboardButton("❌ CANCELAR", callback_data="cancelar")]]
     
     reply_markup = InlineKeyboardMarkup(keyboard)
-
     await update.message.reply_text("💰 Qual gateway deseja adicionar:", reply_markup=reply_markup)
     return GATEWAY_ESCOLHA
 
@@ -39,7 +38,18 @@ async def gateway_escolha(update: Update, context: CallbackContext):
         await cancel(update, context)
         return ConversationHandler.END
     elif query.data == 'mp':
-        await query.message.edit_text(f"🔒 Clique no link abaixo para vincular seu mercado pago.\n\n>{escape_markdown_v2(f"https://auth.mercadopago.com/authorization?client_id={config['client_id']}&response_type=code&platform_id=mp&state={context.bot_data['id']}&redirect_url={config['url']}/callback")}", parse_mode='MarkdownV2')
+        # Constrói a URL
+        mp_url = f"https://auth.mercadopago.com/authorization?client_id={config['client_id']}&response_type=code&platform_id=mp&state={context.bot_data['id']}&redirect_url={config['url']}/callback"
+        
+        # Cria o botão com o link
+        keyboard = [[InlineKeyboardButton("🔗 Conectar Mercado Pago", url=mp_url)]]
+        reply_markup = InlineKeyboardMarkup(keyboard)
+        
+        await query.message.edit_text(
+            "🔒 Clique no botão abaixo para vincular seu Mercado Pago:", 
+            reply_markup=reply_markup
+        )
+        
         context.user_data['conv_state'] = False
         return ConversationHandler.END
     elif query.data == 'push':
@@ -48,7 +58,6 @@ async def gateway_escolha(update: Update, context: CallbackContext):
         await query.message.edit_text("🔒 Envie o token da PushinPay.", reply_markup=reply_markup)
         return GATEWAY_RECEBER
     
-
 async def recebe_gateway(update: Update, context: ContextTypes.DEFAULT_TYPE):
     token_recebido = update.message.text.strip()
     keyboard = [[InlineKeyboardButton("❌ CANCELAR", callback_data="cancelar")]]
@@ -64,7 +73,6 @@ async def recebe_gateway(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(text=f"✅ Gateway modificado com sucesso")
     context.user_data['conv_state'] = False
     return ConversationHandler.END
-
 
 conv_handler_gateway = ConversationHandler(
     entry_points=[CommandHandler("gateway", gateway)],
