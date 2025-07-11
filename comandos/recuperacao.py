@@ -89,8 +89,8 @@ async def recuperacao_escolha(update: Update, context: CallbackContext):
         }
         
         await query.message.edit_text(
-            f"🔄 Configurando RECUPERAÇÃO {recovery_index + 1}\n\n"
-            "📝 Envie o post (mídia + texto) que será enviado nesta recuperação:",
+            f"🎣 Recuperação {recovery_index + 1}\n\n"
+            "📝 Envie o post para a recuperação, pode conter midia.",
             reply_markup=cancel_markup
         )
         return RECUPERACAO_MENSAGEM
@@ -130,8 +130,8 @@ async def recuperacao_mensagem(update: Update, context: ContextTypes.DEFAULT_TYP
         context.user_data['recovery_context']['text'] = save['text']
         
         await update.message.reply_text(
-            "🏷 Quantos % de desconto deseja aplicar nesta recuperação?\n"
-            "Digite apenas número (Ex: 20 para 20%)",
+            "🏷 Deseja aplicar desconto nesta recuperação?\n"
+            "Digite apenas o número (Ex: 15 para 15% ou 0 se não quiser desconto)",
             reply_markup=cancel_markup
         )
         return RECUPERACAO_PORCENTAGEM
