@@ -149,7 +149,7 @@ async def recuperacao_porcentagem(update: Update, context: ContextTypes.DEFAULT_
     try:
         porcentagem = float(update.message.text.replace(',', '.'))
         if porcentagem < 0 or porcentagem >= 100:  # MUDANÇA: <= virou 
-            await update.message.reply_text("⛔ A porcentagem deve estar entre 0 e 99:", reply_markup=cancel_markup)
+            await update.message.reply_text("⛔ Valor inválido. A porcentagem precisa estar entre 0 e 99.", reply_markup=cancel_markup)
             return RECUPERACAO_PORCENTAGEM
         
         context.user_data['recovery_context']['porcentagem'] = porcentagem
