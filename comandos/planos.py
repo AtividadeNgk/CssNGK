@@ -26,7 +26,7 @@ async def planos(update: Update, context: ContextTypes.DEFAULT_TYPE):
     plan_list = manager.get_bot_plans(context.bot_data['id'])
     if len(plan_list) > 0:
         keyboard = [
-            [InlineKeyboardButton("Adicionar", callback_data="adicionar"), InlineKeyboardButton("➖ Remover", callback_data="remover")],
+            [InlineKeyboardButton("Adicionar", callback_data="adicionar"), InlineKeyboardButton("Remover", callback_data="remover")],
             [InlineKeyboardButton("❌ CANCELAR", callback_data="cancelar")]]
     else:
         keyboard = [
@@ -62,7 +62,7 @@ async def planos_escolha(update: Update, context: CallbackContext):
             keyboard_plans.append([InlineKeyboardButton(planos[plan_index]['name'], callback_data=f"planor_{plan_index}")])
         keyboard_plans.append([InlineKeyboardButton("❌ CANCELAR", callback_data="cancelar")])
         markup_plans = InlineKeyboardMarkup(keyboard_plans)
-        await query.message.edit_text("💎 Qual plano você deseja deletar:", reply_markup=markup_plans, parse_mode='MarkdownV2')
+        await query.message.edit_text("🗑 Qual plano você deseja remover?", reply_markup=markup_plans, parse_mode='MarkdownV2')
         return PLANOS_DELETAR
 
 async def planos_deletar(update: Update, context: CallbackContext):
