@@ -24,12 +24,12 @@ async def upsell(update: Update, context: ContextTypes.DEFAULT_TYPE):
     context.user_data['conv_state'] = "upsell"
 
     keyboard = [
-        [InlineKeyboardButton("➕ ADICIONAR", callback_data="adicionar"), InlineKeyboardButton("➖ REMOVER", callback_data="remover")],
+        [InlineKeyboardButton("Adicionar", callback_data="adicionar"), InlineKeyboardButton("Remover", callback_data="remover")],
         [InlineKeyboardButton("❌ CANCELAR", callback_data="cancelar")]
     ]
     
     reply_markup = InlineKeyboardMarkup(keyboard)
-    await update.message.reply_text("💵 Qual ação deseja fazer com o upsell?", reply_markup=reply_markup)
+    await update.message.reply_text("📈 O que deseja fazer com o Upsell?", reply_markup=reply_markup)
     return UPSELL_ESCOLHA
 
 async def upsell_escolha(update: Update, context: CallbackContext):
