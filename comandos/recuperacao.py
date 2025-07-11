@@ -166,7 +166,7 @@ async def recuperacao_porcentagem(update: Update, context: ContextTypes.DEFAULT_
         reply_markup = InlineKeyboardMarkup(keyboard)
         
         await update.message.reply_text(
-            "⏰ Selecione a unidade de tempo para o disparo",
+            "⏰ Escolha a unidade de tempo para a sua recuperação.",
             reply_markup=reply_markup
         )
         return RECUPERACAO_UNIDADE_TEMPO
