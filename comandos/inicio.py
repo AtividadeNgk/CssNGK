@@ -9,7 +9,7 @@ from telegram.error import BadRequest, Conflict
 from modules.utils import process_command, is_admin, cancel, error_callback, error_message
 
 keyboardc = [
-            [InlineKeyboardButton("❌ CANCELAR", callback_data="cancelar")]
+            [InlineKeyboardButton("❌ Cancelar", callback_data="cancelar")]
         ]
 cancel_markup = InlineKeyboardMarkup(keyboardc)
 
@@ -33,7 +33,7 @@ async def inicio(update: Update, context: ContextTypes.DEFAULT_TYPE):
     keyboard = [
         [InlineKeyboardButton("Midia Inicial", callback_data="midia"), InlineKeyboardButton("Texto 1", callback_data="texto1")],
         [InlineKeyboardButton("Texto 2", callback_data="texto2"), InlineKeyboardButton("Botão", callback_data="botao")],
-        [InlineKeyboardButton("❌ CANCELAR", callback_data="cancelar")]
+        [InlineKeyboardButton("❌ Cancelar", callback_data="cancelar")]
     ]
 
     reply_markup = InlineKeyboardMarkup(keyboard)
@@ -58,7 +58,7 @@ async def inicio_escolha(update: Update, context: CallbackContext):
 
     # Se for botão, vai direto para receber o texto
     if query.data == 'botao':
-        keyboard = [[InlineKeyboardButton("❌ CANCELAR", callback_data="cancelar")]]
+        keyboard = [[InlineKeyboardButton("❌ Cancelar", callback_data="cancelar")]]
         reply_markup = InlineKeyboardMarkup(keyboard)
         await query.message.edit_text(
             "🕹 Envie abaixo o texto que deseja para o botão inicial\n\n"
@@ -70,18 +70,18 @@ async def inicio_escolha(update: Update, context: CallbackContext):
 
     keyboard = [
         [InlineKeyboardButton("Adicionar", callback_data="adicionar"), InlineKeyboardButton("Remover", callback_data="deletar")],
-        [InlineKeyboardButton("❌ CANCELAR", callback_data="cancelar")]
+        [InlineKeyboardButton("❌ Cancelar", callback_data="cancelar")]
     ]
 
     reply_markup = InlineKeyboardMarkup(keyboard)
 
     # Textos específicos para cada opção
     if query.data == 'midia':
-        texto = "🎬 Deseja adicionar ou remover a mídia inicial?"
+        texto = "🎬 O que deseja fazer com a mídia inicial?"
     elif query.data == 'texto1':
-        texto = "📝 Deseja adicionar ou remover o Texto 1?"
+        texto = "📝 O que deseja fazer com o Texto 1?"
     elif query.data == 'texto2':
-        texto = "📝 Deseja adicionar ou remover o Texto 2?"
+        texto = "📝 O que deseja fazer com o Texto 2?"
     else:
         texto = f"🛠️ Deseja adicionar ou deletar o valor para {query.data}?"
     
@@ -127,7 +127,7 @@ async def inicio_adicionar_ou_deletar(update: Update, context: CallbackContext):
         return ConversationHandler.END
 
     elif query.data == 'adicionar':
-        keyboard = [[InlineKeyboardButton("❌ CANCELAR", callback_data="cancelar")]]
+        keyboard = [[InlineKeyboardButton("❌ Cancelar", callback_data="cancelar")]]
         reply_markup = InlineKeyboardMarkup(keyboard)
 
         if acao == "midia":
