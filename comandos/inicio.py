@@ -60,7 +60,12 @@ async def inicio_escolha(update: Update, context: CallbackContext):
     if query.data == 'botao':
         keyboard = [[InlineKeyboardButton("❌ CANCELAR", callback_data="cancelar")]]
         reply_markup = InlineKeyboardMarkup(keyboard)
-        await query.message.edit_text("🕹 Envie o texto para o botão inicial", reply_markup=reply_markup)
+        await query.message.edit_text(
+            "🕹 Envie abaixo o texto que deseja para o botão inicial\n\n"
+            ">𝗖𝗼𝗺𝗼 𝗳𝘂𝗻𝗰𝗶𝗼𝗻𝗮\\? Esse texto é aplicado no botão que o usuário clica para exibir a lista de planos no início do bot\\.",
+            reply_markup=reply_markup,
+            parse_mode='MarkdownV2'
+        )
         return INICIO_RECEBER
 
     keyboard = [
