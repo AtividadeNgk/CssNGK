@@ -161,7 +161,7 @@ async def inicio_receber(update: Update, context: ContextTypes.DEFAULT_TYPE):
             else:
                 for i in range(10):
                     print('erro')
-                await update.message.reply_text("⛔ Envie uma mídia válida (foto ou vídeo).", reply_markup=cancel_markup)
+                await update.message.reply_text("⛔️ Por favor, envie apenas mídia.", reply_markup=cancel_markup)
                 return INICIO_RECEBER
 
         elif acao in ["texto1", "texto2"]:
