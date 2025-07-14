@@ -121,7 +121,12 @@ async def inicio_adicionar_ou_deletar(update: Update, context: CallbackContext):
         reply_markup = InlineKeyboardMarkup(keyboard)
 
         if acao == "midia":
-            await query.message.edit_text("🎬 Envie a mídia inicial.", reply_markup=reply_markup)
+            await query.message.edit_text(
+                "🎬 Envie abaixo a mídia inicial que deseja definir ⬋\n\n"
+                ">𝗖𝗼𝗺𝗼 𝗳𝘂𝗻𝗰𝗶𝗼𝗻𝗮\\? A mídia enviada será aplicada no início do seu bot\\.",
+                reply_markup=reply_markup,
+                parse_mode='MarkdownV2'
+            )
         elif acao == "texto1":
             await query.message.edit_text("📝 Envie o Texto 1.", reply_markup=reply_markup)
         elif acao == "texto2":
