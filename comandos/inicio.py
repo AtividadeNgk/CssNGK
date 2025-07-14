@@ -165,8 +165,9 @@ async def inicio_receber(update: Update, context: ContextTypes.DEFAULT_TYPE):
                 return INICIO_RECEBER
 
         elif acao in ["texto1", "texto2"]:
-            if update.message.photo or update.message.video:
-                await update.message.reply_text(f"⛔ Envie apenas texto, mídia não suportada", reply_markup=cancel_markup)
+            # Verifica se é texto puro (não é mídia, sticker, documento, áudio, etc)
+            if not update.message.text or update.message.photo or update.message.video or update.message.sticker or update.message.document or update.message.audio or update.message.voice or update.message.video_note or update.message.animation:
+                await update.message.reply_text("⛔ Por favor, envie apenas texto.", reply_markup=cancel_markup)
                 return INICIO_RECEBER
             context.user_data['inicio_context'][acao] = mensagem
             if acao == "texto1":
