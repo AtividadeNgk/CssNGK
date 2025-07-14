@@ -38,7 +38,12 @@ async def inicio(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     reply_markup = InlineKeyboardMarkup(keyboard)
 
-    await update.message.reply_text("<b>📱 O que deseja modificar no início?</b>", reply_markup=reply_markup, parse_mode='HTML')
+    await update.message.reply_text(
+        "📱 O que deseja modificar no início?\n\n"
+        ">𝗖𝗼𝗺𝗼 𝗳𝘂𝗻𝗰𝗶𝗼𝗻𝗮\\? Esse comando serve para personalizar o início do seu bot\\. Personalize textos, midia inicial e o botão inicial\\.",
+        reply_markup=reply_markup,
+        parse_mode='MarkdownV2'
+    )
     return INICIO_ESCOLHA
 
 async def inicio_escolha(update: Update, context: CallbackContext):
