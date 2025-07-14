@@ -34,7 +34,12 @@ async def planos(update: Update, context: ContextTypes.DEFAULT_TYPE):
             [InlineKeyboardButton("❌ CANCELAR", callback_data="cancelar")]]
     
     reply_markup = InlineKeyboardMarkup(keyboard)
-    await update.message.reply_text("💰 O que deseja fazer com os planos?", reply_markup=reply_markup)
+    await update.message.reply_text(
+        "💰 O que deseja fazer com os planos?\n\n"
+        ">𝗖𝗼𝗺𝗼 𝗳𝘂𝗻𝗰𝗶𝗼𝗻𝗮\\? Esse comando é usado para criar planos de assinatura para seu Grupo VIP\\.",
+        reply_markup=reply_markup,
+        parse_mode='MarkdownV2'
+    )
     return PLANOS_ESCOLHA
 
 async def planos_escolha(update: Update, context: CallbackContext):
@@ -99,7 +104,7 @@ async def plano_nome(update: Update, context: ContextTypes.DEFAULT_TYPE):
     ]
     reply_markup = InlineKeyboardMarkup(keyboard)
     context.user_data['plan_context']['name'] = update.message.text
-    await update.message.reply_text("⏳ Escolha a unidade de tempo do seu plano.", reply_markup=reply_markup)
+    await update.message.reply_text("⏳ Qual será o período do plano?", reply_markup=reply_markup)
     return PLANOS_TEMPO_TIPO
 
 async def plano_tempo_tipo(update: Update, context: CallbackContext):
