@@ -51,7 +51,7 @@ async def gateway_escolha(update: Update, context: CallbackContext):
         reply_markup = InlineKeyboardMarkup(keyboard)
         
         await query.message.edit_text(
-            "🔒 Clique no botão abaixo para vincular seu Mercado Pago:", 
+            "🔒 Clique no botão abaixo para vincular seu Mercado Pago.", 
             reply_markup=reply_markup
         )
         
