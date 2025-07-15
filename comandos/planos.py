@@ -27,11 +27,11 @@ async def planos(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if len(plan_list) > 0:
         keyboard = [
             [InlineKeyboardButton("Adicionar", callback_data="adicionar"), InlineKeyboardButton("Remover", callback_data="remover")],
-            [InlineKeyboardButton("❌ CANCELAR", callback_data="cancelar")]]
+            [InlineKeyboardButton("❌ Cancelar", callback_data="cancelar")]]
     else:
         keyboard = [
             [InlineKeyboardButton("Adicionar", callback_data="adicionar")],
-            [InlineKeyboardButton("❌ CANCELAR", callback_data="cancelar")]]
+            [InlineKeyboardButton("❌ Cancelar", callback_data="cancelar")]]
     
     reply_markup = InlineKeyboardMarkup(keyboard)
     await update.message.reply_text(
@@ -45,7 +45,7 @@ async def planos(update: Update, context: ContextTypes.DEFAULT_TYPE):
 async def planos_escolha(update: Update, context: CallbackContext):
     query = update.callback_query
     await query.answer()
-    keyboard = [[InlineKeyboardButton("❌ CANCELAR", callback_data="cancelar")]]
+    keyboard = [[InlineKeyboardButton("❌ Cancelar", callback_data="cancelar")]]
     reply_markup = InlineKeyboardMarkup(keyboard)
 
     if query.data == 'cancelar':
@@ -65,7 +65,7 @@ async def planos_escolha(update: Update, context: CallbackContext):
         keyboard_plans = []
         for plan_index in range(len(planos)):
             keyboard_plans.append([InlineKeyboardButton(planos[plan_index]['name'], callback_data=f"planor_{plan_index}")])
-        keyboard_plans.append([InlineKeyboardButton("❌ CANCELAR", callback_data="cancelar")])
+        keyboard_plans.append([InlineKeyboardButton("❌ Cancelar", callback_data="cancelar")])
         markup_plans = InlineKeyboardMarkup(keyboard_plans)
         await query.message.edit_text("🗑 Qual plano você deseja remover?", reply_markup=markup_plans, parse_mode='MarkdownV2')
         return PLANOS_DELETAR
@@ -100,7 +100,7 @@ async def plano_nome(update: Update, context: ContextTypes.DEFAULT_TYPE):
         [InlineKeyboardButton(f"Meses", callback_data='unidade_mes')],
         [InlineKeyboardButton(f"Anos", callback_data='unidade_ano')],
         [InlineKeyboardButton(f"Vitalício", callback_data='unidade_eterno')],
-        [InlineKeyboardButton('❌ CANCELAR', callback_data='cancelar')]
+        [InlineKeyboardButton('❌ Cancelar', callback_data='cancelar')]
     ]
     reply_markup = InlineKeyboardMarkup(keyboard)
     context.user_data['plan_context']['name'] = update.message.text
@@ -110,7 +110,7 @@ async def plano_nome(update: Update, context: ContextTypes.DEFAULT_TYPE):
 async def plano_tempo_tipo(update: Update, context: CallbackContext):
     query = update.callback_query
     await query.answer()
-    keyboard = [[InlineKeyboardButton("❌ CANCELAR", callback_data="cancelar")]]
+    keyboard = [[InlineKeyboardButton("❌ Cancelar", callback_data="cancelar")]]
     reply_markup = InlineKeyboardMarkup(keyboard)
 
     if query.data == 'cancelar':
@@ -165,9 +165,9 @@ async def plano_valor(update: Update, context: ContextTypes.DEFAULT_TYPE):
         return PLANOS_VALOR
     try:
         keyboard = [[InlineKeyboardButton("✅ Confirmar", callback_data="confirmar")],
-            [InlineKeyboardButton("❌ CANCELAR", callback_data="cancelar")]]
+            [InlineKeyboardButton("❌ Cancelar", callback_data="cancelar")]]
 
-        keyboard2 = [[InlineKeyboardButton("❌ CANCELAR", callback_data="cancelar")]]
+        keyboard2 = [[InlineKeyboardButton("❌ Cancelar", callback_data="cancelar")]]
         reply_markup = InlineKeyboardMarkup(keyboard)
         reply_markup2 = InlineKeyboardMarkup(keyboard2)
         valor = float(update.message.text.replace(',','.'))
@@ -213,7 +213,7 @@ async def plano_valor(update: Update, context: ContextTypes.DEFAULT_TYPE):
         return PLANOS_CONFIRMAR
     except Exception as e:
         print(e)
-        await update.message.reply_text("❌ Envie um valor numérico válido. Exemplo: 24.90", reply_markup=reply_markup2)
+        await update.message.reply_text("⛔️ Envie um valor numérico válido. Exemplo: 24.90", reply_markup=reply_markup2)
         return PLANOS_VALOR
         
 async def plano_confirmar(update: Update, context: CallbackContext):
