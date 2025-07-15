@@ -28,7 +28,12 @@ async def gateway(update: Update, context: ContextTypes.DEFAULT_TYPE):
             [InlineKeyboardButton("❌ CANCELAR", callback_data="cancelar")]]
     
     reply_markup = InlineKeyboardMarkup(keyboard)
-    await update.message.reply_text("💰 Qual gateway deseja adicionar:", reply_markup=reply_markup)
+    await update.message.reply_text(
+        "🔐 Qual gateway deseja adicionar?\n\n"
+        ">𝗖𝗼𝗺𝗼 𝗳𝘂𝗻𝗰𝗶𝗼𝗻𝗮\\? Conecte seu bot com Mercado Pago ou PushinPay para processar pagamentos\\.",
+        reply_markup=reply_markup,
+        parse_mode='MarkdownV2'
+    )
     return GATEWAY_ESCOLHA
 
 async def gateway_escolha(update: Update, context: CallbackContext):
@@ -66,7 +71,12 @@ async def recebe_gateway(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await update.message.reply_text(text=f"⛔ Token invalido, por favor envie um valido")
         return GATEWAY_RECEBER
     if not payment.verificar_push(token_recebido):
-        await update.message.reply_text("❌ Insira um token valido:", reply_markup=reply_markup)
+        await update.message.reply_text(
+            "❌ Token inválido\\! O Token deve ser nesse formato ⬋\n\n"
+            ">36498\\|kMLGkibg5Z2D1Ap8hyvabkYsf5emCcREMpRMkTPa2c802374",
+            reply_markup=reply_markup,
+            parse_mode='MarkdownV2'
+        )
         return GATEWAY_RECEBER
     
     manager.update_bot_gateway(context.bot_data['id'], {'type':'pp', 'token':token_recebido})
