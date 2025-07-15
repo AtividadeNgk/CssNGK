@@ -42,7 +42,7 @@ async def recuperacao(update: Update, context: ContextTypes.DEFAULT_TYPE):
     
     reply_markup = InlineKeyboardMarkup(keyboard)
     await update.message.reply_text(
-        "🎣 Selecione qual recuperação deseja configurar.\n\n"
+        "🎣 Selecione qual recuperação deseja configurar\\.\n\n"
         ">𝗖𝗼𝗺𝗼 𝗳𝘂𝗻𝗰𝗶𝗼𝗻𝗮\\? Crie mensagens que serão enviadas automaticamente após o cliente dar /start e não comprar\\. Defina o tempo de envio e desconto opcional para cada uma\\.",
         reply_markup=reply_markup,
         parse_mode='MarkdownV2'
