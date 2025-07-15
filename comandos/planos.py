@@ -128,7 +128,15 @@ async def plano_tempo_tipo(update: Update, context: CallbackContext):
             'mes':'meses',
             'ano':'anos'
         }
-        await query.message.edit_text(f"⌛️ Quantos {names[context.user_data['plan_context']['time_type']]} terá o seu plano?", reply_markup=reply_markup)
+        
+        # Define o artigo correto baseado no gênero
+        time_type = context.user_data['plan_context']['time_type']
+        if time_type == 'semana':
+            artigo = "Quantas"
+        else:
+            artigo = "Quantos"
+            
+        await query.message.edit_text(f"⌛️ {artigo} {names[time_type]} terá o seu plano?", reply_markup=reply_markup)
         return PLANOS_TEMPO
 
 
