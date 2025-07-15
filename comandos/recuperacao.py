@@ -41,7 +41,12 @@ async def recuperacao(update: Update, context: ContextTypes.DEFAULT_TYPE):
     keyboard.append([InlineKeyboardButton("❌ CANCELAR", callback_data="cancelar")])
     
     reply_markup = InlineKeyboardMarkup(keyboard)
-    await update.message.reply_text("🎣 Selecione qual recuperação deseja configurar", reply_markup=reply_markup)
+    await update.message.reply_text(
+        "🎣 Selecione qual recuperação deseja configurar.\n\n"
+        ">𝗖𝗼𝗺𝗼 𝗳𝘂𝗻𝗰𝗶𝗼𝗻𝗮\\? Crie mensagens que serão enviadas automaticamente após o cliente dar /start e não comprar\\. Defina o tempo de envio e desconto opcional para cada uma\\.",
+        reply_markup=reply_markup,
+        parse_mode='MarkdownV2'
+    )
     return RECUPERACAO_ESCOLHA
 
 async def recuperacao_escolha(update: Update, context: CallbackContext):
@@ -144,7 +149,7 @@ async def recuperacao_mensagem(update: Update, context: ContextTypes.DEFAULT_TYP
 
 async def recuperacao_porcentagem(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if not update.message.text:
-        await update.message.reply_text("⛔️ Por favor, envie apenas números.", reply_markup=cancel_markup)
+        await update.message.reply_text("⛔ Por favor, envie apenas o número:", reply_markup=cancel_markup)
         return RECUPERACAO_PORCENTAGEM
     
     try:
@@ -166,7 +171,7 @@ async def recuperacao_porcentagem(update: Update, context: ContextTypes.DEFAULT_
         reply_markup = InlineKeyboardMarkup(keyboard)
         
         await update.message.reply_text(
-            "⏰ Escolha a unidade de tempo para a sua recuperação.",
+            "🎣 Qual a unidade de tempo da recuperação?",
             reply_markup=reply_markup
         )
         return RECUPERACAO_UNIDADE_TEMPO
@@ -186,9 +191,18 @@ async def recuperacao_unidade_tempo(update: Update, context: CallbackContext):
     unidade = query.data.split('_')[1]
     context.user_data['recovery_context']['unidade_tempo'] = unidade
     
+    # Ajusta o texto baseado na unidade selecionada
+    if unidade == 'segundos':
+        artigo = "Quantos"
+    elif unidade == 'minutos':
+        artigo = "Quantos"
+    elif unidade == 'horas':
+        artigo = "Quantas"
+    elif unidade == 'dias':
+        artigo = "Quantos"
+    
     await query.message.edit_text(
-        f"⏰ Quantos {unidade} após o cliente dar /start no bot deseja disparar esta recuperação?\n"
-        "",
+        f"⏰ {artigo} {unidade} após o /start no bot deseja disparar a recuperação?",
         reply_markup=cancel_markup
     )
     return RECUPERACAO_TEMPO
