@@ -151,13 +151,25 @@ async def inicio_receber(update: Update, context: ContextTypes.DEFAULT_TYPE):
     try:
         if acao == "midia":
             if update.message.photo or update.message.video:
-                media_file = await (update.message.photo[-1] if update.message.photo else update.message.video).get_file()
-                context.user_data['inicio_context']['midia'] = {
-                    'file': media_file.file_id,
-                    'type': 'photo' if update.message.photo else 'video'
-                }
-                await update.message.reply_text("✅ Mídia inicial atualizada com sucesso.")
-                manager.update_bot_config(context.bot_data['id'], context.user_data['inicio_context'])
+                try:
+                    media_file = await (update.message.photo[-1] if update.message.photo else update.message.video).get_file()
+                    context.user_data['inicio_context']['midia'] = {
+                        'file': media_file.file_id,
+                        'type': 'photo' if update.message.photo else 'video'
+                    }
+                    await update.message.reply_text("✅ Mídia inicial atualizada com sucesso.")
+                    manager.update_bot_config(context.bot_data['id'], context.user_data['inicio_context'])
+                except Exception as media_error:
+                    if "File is too big" in str(media_error) or "file is too big" in str(media_error).lower():
+                        await update.message.reply_text(
+                            "❌ O Telegram limita mídias a 20MB para bots\\. Por favor, envie uma menor\\.\n\n"
+                            ">𝗗𝗶𝗰𝗮\\: Bots do Telegram só aceitam mídias de até 20MB\\. Use um compressor de vídeos online para reduzir o tamanho da sua mídia\\.",
+                            reply_markup=cancel_markup,
+                            parse_mode='MarkdownV2'
+                        )
+                        return INICIO_RECEBER
+                    else:
+                        raise media_error
             else:
                 for i in range(10):
                     print('erro')
@@ -187,17 +199,7 @@ async def inicio_receber(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     except Exception as e:
         print('erro')
-        # Verifica se é erro de arquivo muito grande
-        if "File is too big" in str(e):
-            await update.message.reply_text(
-                "❌ O Telegram limita mídias a 20MB para bots. Por favor, envie uma menor.\n\n"
-                ">𝗗𝗶𝗰𝗮\\: Bots do Telegram só aceitam mídias de até 20MB\\. Use um compressor de vídeos online para reduzir o tamanho da sua mídia\\.",
-                reply_markup=cancel_markup,
-                parse_mode='MarkdownV2'
-            )
-            return INICIO_RECEBER
-        else:
-            await update.message.reply_text(f"⛔ Erro ao modificar o inicio: {str(e)}")
+        await update.message.reply_text(f"⛔ Erro ao modificar o inicio: {str(e)}")
         context.user_data['conv_state'] = False
         return ConversationHandler.END
 
