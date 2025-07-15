@@ -144,7 +144,7 @@ async def recuperacao_mensagem(update: Update, context: ContextTypes.DEFAULT_TYP
 
 async def recuperacao_porcentagem(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if not update.message.text:
-        await update.message.reply_text("⛔ Por favor, envie apenas o número:", reply_markup=cancel_markup)
+        await update.message.reply_text("⛔️ Por favor, envie apenas números.", reply_markup=cancel_markup)
         return RECUPERACAO_PORCENTAGEM
     
     try:
@@ -195,13 +195,13 @@ async def recuperacao_unidade_tempo(update: Update, context: CallbackContext):
 
 async def recuperacao_tempo(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if not update.message.text:
-        await update.message.reply_text("⛔ Por favor, envie apenas o número:", reply_markup=cancel_markup)
+        await update.message.reply_text("⛔️ Por favor, envie apenas números.", reply_markup=cancel_markup)
         return RECUPERACAO_TEMPO
     
     try:
         tempo = int(update.message.text)
         if tempo <= 0:
-            await update.message.reply_text("⛔ O tempo deve ser maior que zero:", reply_markup=cancel_markup)
+            await update.message.reply_text("⛔ O tempo deve ser maior que zero.", reply_markup=cancel_markup)
             return RECUPERACAO_TEMPO
         
         # Valida se não excede 7 dias
@@ -216,7 +216,7 @@ async def recuperacao_tempo(update: Update, context: ContextTypes.DEFAULT_TYPE):
             tempo_em_minutos = tempo * 24 * 60
         
         if tempo_em_minutos > 7 * 24 * 60:  # 7 dias em minutos
-            await update.message.reply_text("⛔ O tempo máximo é 7 dias:", reply_markup=cancel_markup)
+            await update.message.reply_text("⛔ O tempo máximo é 7 dias.", reply_markup=cancel_markup)
             return RECUPERACAO_TEMPO
         
         context.user_data['recovery_context']['tempo'] = tempo
@@ -242,7 +242,7 @@ async def recuperacao_tempo(update: Update, context: ContextTypes.DEFAULT_TYPE):
         return RECUPERACAO_CONFIRMAR
         
     except ValueError:
-        await update.message.reply_text("⛔ Envie um número válido:", reply_markup=cancel_markup)
+        await update.message.reply_text("⛔ Envie um número válido.", reply_markup=cancel_markup)
         return RECUPERACAO_TEMPO
 
 async def recuperacao_confirmar(update: Update, context: CallbackContext):
