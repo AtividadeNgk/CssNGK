@@ -65,10 +65,17 @@ async def recuperacao_escolha(update: Update, context: CallbackContext):
         for i in range(5):
             if len(recoveries) > i and recoveries[i] is not None:
                 rec = recoveries[i]
-                tempo_str = f"{rec['tempo']} {rec['unidade_tempo']}"
+                # Formata o tempo de forma mais limpa
+                tempo = rec['tempo']
+                unidade = rec['unidade_tempo'].capitalize()
+                if tempo == 1:
+                    # Remove o 's' do final para singular
+                    if unidade.endswith('s'):
+                        unidade = unidade[:-1]
+                
                 keyboard.append([
                     InlineKeyboardButton(
-                        f"Recuperação {i+1}: {rec['porcentagem']}% em {tempo_str}", 
+                        f"𝗥𝗘𝗖𝗨𝗣𝗘𝗥𝗔𝗖̧𝗔̃𝗢 {i+1} ➛ {rec['porcentagem']:.0f}% ({tempo} {unidade})", 
                         callback_data=f"del_{i}"
                     )
                 ])
@@ -76,29 +83,8 @@ async def recuperacao_escolha(update: Update, context: CallbackContext):
         keyboard.append([InlineKeyboardButton("❌ Cancelar", callback_data="cancelar")])
         reply_markup = InlineKeyboardMarkup(keyboard)
         
-        await query.message.edit_text("🔄 Qual recuperação deseja remover?", reply_markup=reply_markup)
+        await query.message.edit_text("🧹 Qual recuperação deseja remover?", reply_markup=reply_markup)
         return RECUPERACAO_DELETAR
-    
-    elif query.data.startswith('rec_'):
-        recovery_index = int(query.data.split('_')[1])
-        context.user_data['recovery_index'] = recovery_index
-        
-        # Inicia configuração da recuperação
-        context.user_data['recovery_context'] = {
-            'index': recovery_index,
-            'media': False,
-            'text': False,
-            'porcentagem': False,
-            'unidade_tempo': False,
-            'tempo': False
-        }
-        
-        await query.message.edit_text(
-            f"🎣 Recuperação {recovery_index + 1}\n\n"
-            "📝 Envie o post para a recuperação, pode conter midia.",
-            reply_markup=cancel_markup
-        )
-        return RECUPERACAO_MENSAGEM
 
 async def recuperacao_mensagem(update: Update, context: ContextTypes.DEFAULT_TYPE):
     try:
