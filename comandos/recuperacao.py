@@ -36,7 +36,7 @@ async def recuperacao(update: Update, context: ContextTypes.DEFAULT_TYPE):
     # Adiciona botão de remover se houver alguma recuperação
     has_recovery = any(r is not None for r in recoveries if recoveries)
     if has_recovery:
-        keyboard.append([InlineKeyboardButton("🧹 Remover", callback_data="remover")])
+        keyboard.append([InlineKeyboardButton("🧹 𝗥𝗲𝗺𝗼𝘃𝗲𝗿", callback_data="remover")])
     
     keyboard.append([InlineKeyboardButton("❌ Cancelar", callback_data="cancelar")])
     
