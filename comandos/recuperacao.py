@@ -85,6 +85,27 @@ async def recuperacao_escolha(update: Update, context: CallbackContext):
         
         await query.message.edit_text("🧹 Qual recuperação deseja remover?", reply_markup=reply_markup)
         return RECUPERACAO_DELETAR
+    
+    elif query.data.startswith('rec_'):  # ESTA PARTE ESTAVA FALTANDO!
+        recovery_index = int(query.data.split('_')[1])
+        context.user_data['recovery_index'] = recovery_index
+        
+        # Inicia configuração da recuperação
+        context.user_data['recovery_context'] = {
+            'index': recovery_index,
+            'media': False,
+            'text': False,
+            'porcentagem': False,
+            'unidade_tempo': False,
+            'tempo': False
+        }
+        
+        await query.message.edit_text(
+            f"🎣 Recuperação {recovery_index + 1}\n\n"
+            "📝 Envie o post para a recuperação, pode conter midia.",
+            reply_markup=cancel_markup
+        )
+        return RECUPERACAO_MENSAGEM
 
 async def recuperacao_mensagem(update: Update, context: ContextTypes.DEFAULT_TYPE):
     try:
