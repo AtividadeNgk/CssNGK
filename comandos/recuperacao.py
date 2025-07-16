@@ -10,7 +10,7 @@ from modules.utils import process_command, is_admin, cancel, error_callback, esc
 RECUPERACAO_ESCOLHA, RECUPERACAO_ACAO, RECUPERACAO_MENSAGEM, RECUPERACAO_PORCENTAGEM, RECUPERACAO_UNIDADE_TEMPO, RECUPERACAO_TEMPO, RECUPERACAO_CONFIRMAR, RECUPERACAO_DELETAR = range(8)
 
 keyboardc = [
-    [InlineKeyboardButton("❌ CANCELAR", callback_data="cancelar")]
+    [InlineKeyboardButton("❌ Cancelar", callback_data="cancelar")]
 ]
 cancel_markup = InlineKeyboardMarkup(keyboardc)
 
@@ -36,9 +36,9 @@ async def recuperacao(update: Update, context: ContextTypes.DEFAULT_TYPE):
     # Adiciona botão de remover se houver alguma recuperação
     has_recovery = any(r is not None for r in recoveries if recoveries)
     if has_recovery:
-        keyboard.append([InlineKeyboardButton("➖ REMOVER", callback_data="remover")])
+        keyboard.append([InlineKeyboardButton("🧹 Remover", callback_data="remover")])
     
-    keyboard.append([InlineKeyboardButton("❌ CANCELAR", callback_data="cancelar")])
+    keyboard.append([InlineKeyboardButton("❌ Cancelar", callback_data="cancelar")])
     
     reply_markup = InlineKeyboardMarkup(keyboard)
     await update.message.reply_text(
@@ -73,7 +73,7 @@ async def recuperacao_escolha(update: Update, context: CallbackContext):
                     )
                 ])
         
-        keyboard.append([InlineKeyboardButton("❌ CANCELAR", callback_data="cancelar")])
+        keyboard.append([InlineKeyboardButton("❌ Cancelar", callback_data="cancelar")])
         reply_markup = InlineKeyboardMarkup(keyboard)
         
         await query.message.edit_text("🔄 Qual recuperação deseja remover?", reply_markup=reply_markup)
@@ -166,7 +166,7 @@ async def recuperacao_porcentagem(update: Update, context: ContextTypes.DEFAULT_
             [InlineKeyboardButton("Minutos", callback_data="tempo_minutos")],
             [InlineKeyboardButton("Horas", callback_data="tempo_horas")],
             [InlineKeyboardButton("Dias", callback_data="tempo_dias")],
-            [InlineKeyboardButton("❌ CANCELAR", callback_data="cancelar")]
+            [InlineKeyboardButton("❌ Cancelar", callback_data="cancelar")]
         ]
         reply_markup = InlineKeyboardMarkup(keyboard)
         
@@ -239,7 +239,7 @@ async def recuperacao_tempo(update: Update, context: ContextTypes.DEFAULT_TYPE):
         rec = context.user_data['recovery_context']
         keyboard = [
             [InlineKeyboardButton("✅ CONFIRMAR", callback_data="confirmar")],
-            [InlineKeyboardButton("❌ CANCELAR", callback_data="cancelar")]
+            [InlineKeyboardButton("❌ Cancelar", callback_data="cancelar")]
         ]
         reply_markup = InlineKeyboardMarkup(keyboard)
         
