@@ -123,7 +123,7 @@ async def recuperacao_mensagem(update: Update, context: ContextTypes.DEFAULT_TYP
         elif update.message.text:
             save['text'] = update.message.text
         else:
-            await update.message.reply_text("⛔ Somente texto ou mídia são permitidos.", reply_markup=cancel_markup)
+            await update.message.reply_text("⛔ Somente texto ou mídia são permitidos:", reply_markup=cancel_markup)
             return RECUPERACAO_MENSAGEM
         
         # Captura caption se houver
@@ -135,10 +135,10 @@ async def recuperacao_mensagem(update: Update, context: ContextTypes.DEFAULT_TYP
         context.user_data['recovery_context']['text'] = save['text']
         
         await update.message.reply_text(
-            "🏷 <b>Deseja aplicar desconto nesta recuperação?</b>\n\n"
-            "Digite apenas o número (Ex: 15 para 15% ou 0 se não quiser desconto)",
+            "🏷 Deseja aplicar desconto nesta recuperação?\n\n"
+            ">Digite apenas o número \\(Ex\\: 15 para 15% ou 0 se não quiser desconto\\)",
             reply_markup=cancel_markup,
-            parse_mode='HTML'
+            parse_mode='MarkdownV2'
         )
         return RECUPERACAO_PORCENTAGEM
         
