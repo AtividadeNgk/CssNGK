@@ -29,7 +29,12 @@ async def upsell(update: Update, context: ContextTypes.DEFAULT_TYPE):
     ]
     
     reply_markup = InlineKeyboardMarkup(keyboard)
-    await update.message.reply_text("📈 O que deseja fazer com o Upsell?", reply_markup=reply_markup)
+    await update.message.reply_text(
+        "📈 O que deseja fazer com o Upsell?\n\n"
+        ">𝗖𝗼𝗺𝗼 𝗳𝘂𝗻𝗰𝗶𝗼𝗻𝗮\\? Após o cliente finalizar a primeira compra, o bot envia automaticamente uma segunda oferta para o cliente\\.",
+        reply_markup=reply_markup,
+        parse_mode='MarkdownV2'
+    )
     return UPSELL_ESCOLHA
 
 async def upsell_escolha(update: Update, context: CallbackContext):
@@ -48,8 +53,7 @@ async def upsell_escolha(update: Update, context: CallbackContext):
             'group_id': False
         }
         await query.message.edit_text(
-            "💵 Envie a mensagem do upsell com mídia\n"
-            "> Esta será a oferta mostrada após o pagamento principal",
+            "💬 Envie a mensagem para o upsell, pode conter mídia.",
             reply_markup=cancel_markup
         )
         return UPSELL_RECEBER
@@ -92,8 +96,7 @@ async def upsell_receber_mensagem(update: Update, context: ContextTypes.DEFAULT_
         context.user_data['upsell_context']['text'] = save['text']
         
         await update.message.reply_text(
-            "💵 Qual o valor do upsell?\n"
-            "> Este valor será cobrado adicionalmente",
+            "💰 Envie o valor do upsell.",
             reply_markup=cancel_markup
         )
         return UPSELL_VALOR
@@ -105,7 +108,7 @@ async def upsell_receber_mensagem(update: Update, context: ContextTypes.DEFAULT_
 
 async def upsell_valor(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if not update.message.text:
-        await update.message.reply_text("⛔ Por favor, envie apenas o valor numérico:", reply_markup=cancel_markup)
+        await update.message.reply_text("⛔️ Por favor, envie apenas números.", reply_markup=cancel_markup)
         return UPSELL_VALOR
     
     try:
@@ -124,7 +127,7 @@ async def upsell_valor(update: Update, context: ContextTypes.DEFAULT_TYPE):
         return UPSELL_GRUPO
         
     except ValueError:
-        await update.message.reply_text("⛔ Envie um valor numérico válido:", reply_markup=cancel_markup)
+        await update.message.reply_text("⛔️ Por favor, envie apenas números.", reply_markup=cancel_markup)
         return UPSELL_VALOR
 
 async def upsell_grupo(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -136,18 +139,21 @@ async def upsell_grupo(update: Update, context: ContextTypes.DEFAULT_TYPE):
     
     # Testa se o bot tem acesso ao grupo
     try:
-        await context.bot.get_chat(id_recebido)
+        chat = await context.bot.get_chat(id_recebido)
         id_grupo = id_recebido
+        nome_grupo = chat.title
     except:
         try:
             # Tenta com -100
             id_grupo = id_recebido.replace('-', '-100')
-            await context.bot.get_chat(id_grupo)
+            chat = await context.bot.get_chat(id_grupo)
+            nome_grupo = chat.title
         except:
             await update.message.reply_text(
-                "❌ ID inválido ou bot sem permissão\n"
-                "> Certifique-se que o bot é admin no grupo",
-                reply_markup=cancel_markup
+                "⛔️ ID inválido ou incorreto\\.\n\n"
+                ">𝗔𝘃𝗶𝘀𝗼\\: Certifique\\-se que o bot está como administrador no grupo do Upsell com todas as permissões habilitadas\\.",
+                reply_markup=cancel_markup,
+                parse_mode='MarkdownV2'
             )
             return UPSELL_GRUPO
     
@@ -158,9 +164,9 @@ async def upsell_grupo(update: Update, context: ContextTypes.DEFAULT_TYPE):
     manager.update_bot_upsell(context.bot_data['id'], upsell_data)
     
     await update.message.reply_text(
-        f"✅ Upsell configurado com sucesso!\n\n"
-        f"💰 Valor: R$ {upsell_data['value']}\n"
-        f"👥 Grupo VIP: {id_grupo}"
+        f"✅ 𝗨𝗽𝘀𝗲𝗹𝗹 𝗰𝗼𝗻𝗳𝗶𝗴𝘂𝗿𝗮𝗱𝗼!\n\n"
+        f"💰 Valor: R$ {upsell_data['value']:.2f}\n"
+        f"🫂 Grupo: {nome_grupo}"
     )
     
     context.user_data['conv_state'] = False
