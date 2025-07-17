@@ -9,7 +9,7 @@ from modules.utils import process_command, is_admin, cancel, error_callback
 UPSELL_ESCOLHA, UPSELL_RECEBER, UPSELL_VALOR, UPSELL_GRUPO = range(4)
 
 keyboardc = [
-    [InlineKeyboardButton("❌ CANCELAR", callback_data="cancelar")]
+    [InlineKeyboardButton("❌ Cancelar", callback_data="cancelar")]
 ]
 cancel_markup = InlineKeyboardMarkup(keyboardc)
 
@@ -25,7 +25,7 @@ async def upsell(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     keyboard = [
         [InlineKeyboardButton("Adicionar", callback_data="adicionar"), InlineKeyboardButton("Remover", callback_data="remover")],
-        [InlineKeyboardButton("❌ CANCELAR", callback_data="cancelar")]
+        [InlineKeyboardButton("❌ Cancelar", callback_data="cancelar")]
     ]
     
     reply_markup = InlineKeyboardMarkup(keyboard)
