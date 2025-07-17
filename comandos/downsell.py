@@ -109,8 +109,8 @@ async def downsell_receber_mensagem(update: Update, context: ContextTypes.DEFAUL
         upsell_value = upsell_config.get('value', 0)
         
         await update.message.reply_text(
-            f"💰 Envie o valor do downsell.\n\n"
-            f">𝗗𝗶𝗰𝗮\\: Use um valor menor que o upsell para incentivar o cliente aceitar a oferta\\.",
+            "💰 Envie o valor do downsell\\.\n\n"
+            ">𝗗𝗶𝗰𝗮\\: Use um valor menor que o upsell para incentivar o cliente aceitar a oferta\\.",
             reply_markup=cancel_markup,
             parse_mode='MarkdownV2'
         )
