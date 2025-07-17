@@ -120,9 +120,10 @@ async def upsell_valor(update: Update, context: ContextTypes.DEFAULT_TYPE):
         context.user_data['upsell_context']['value'] = valor
         
         await update.message.reply_text(
-            "💵 Envie o ID do grupo VIP do upsell\n"
-            "> Os usuários que pagarem terão acesso a este grupo adicional",
-            reply_markup=cancel_markup
+            "🌟 Envie o ID do Grupo VIP do Upsell\n\n"
+            ">𝗖𝗼𝗺𝗼 𝗳𝘂𝗻𝗰𝗶𝗼𝗻𝗮\\? Envie aqui o ID do Grupo VIP que o cliente terá acesso após comprar o seu Upsell\\.",
+            reply_markup=cancel_markup,
+            parse_mode='MarkdownV2'
         )
         return UPSELL_GRUPO
         
