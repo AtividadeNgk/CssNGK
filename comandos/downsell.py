@@ -39,7 +39,12 @@ async def downsell(update: Update, context: ContextTypes.DEFAULT_TYPE):
     ]
     
     reply_markup = InlineKeyboardMarkup(keyboard)
-    await update.message.reply_text("💸 Qual ação deseja fazer com o downsell?", reply_markup=reply_markup)
+    await update.message.reply_text(
+        "📉 O que deseja fazer com o Downsell?\n\n"
+        ">𝗖𝗼𝗺𝗼 𝗳𝘂𝗻𝗰𝗶𝗼𝗻𝗮\\? Quando o cliente recusar o upsell, o bot envia automaticamente uma última oferta com desconto maior\\.",
+        reply_markup=reply_markup,
+        parse_mode='MarkdownV2'
+    )
     return DOWNSELL_ESCOLHA
 
 async def downsell_escolha(update: Update, context: CallbackContext):
@@ -57,8 +62,7 @@ async def downsell_escolha(update: Update, context: CallbackContext):
             'value': False
         }
         await query.message.edit_text(
-            "💸 Envie a mensagem do downsell com mídia\n"
-            "> Esta será a oferta mostrada se recusarem o upsell",
+            "💬 Envie a mensagem para o downsell, pode conter mídia.",
             reply_markup=cancel_markup
         )
         return DOWNSELL_RECEBER
@@ -105,10 +109,10 @@ async def downsell_receber_mensagem(update: Update, context: ContextTypes.DEFAUL
         upsell_value = upsell_config.get('value', 0)
         
         await update.message.reply_text(
-            f"💸 Qual o valor do downsell?\n"
-            f"> Valor do upsell: R$ {upsell_value}\n"
-            f"> Sugestão: use um valor menor para incentivar",
-            reply_markup=cancel_markup
+            f"💰 Envie o valor do downsell.\n\n"
+            f">𝗗𝗶𝗰𝗮\\: Use um valor menor que o upsell para incentivar o cliente aceitar a oferta\\.",
+            reply_markup=cancel_markup,
+            parse_mode='MarkdownV2'
         )
         return DOWNSELL_VALOR
         
@@ -150,11 +154,10 @@ async def downsell_valor(update: Update, context: ContextTypes.DEFAULT_TYPE):
         desconto = int(((upsell_value - valor) / upsell_value) * 100)
         
         await update.message.reply_text(
-            f"✅ Downsell configurado com sucesso!\n\n"
-            f"💰 Valor do upsell: R$ {upsell_value}\n"
-            f"💸 Valor do downsell: R$ {valor}\n"
-            f"🏷️ Desconto: {desconto}%\n"
-            f"👥 Grupo VIP: Mesmo do upsell"
+            f"✅ 𝗗𝗼𝘄𝗻𝘀𝗲𝗹𝗹 𝗰𝗼𝗻𝗳𝗶𝗴𝘂𝗿𝗮𝗱𝗼!\n\n"
+            f"💰 Valor do upsell: R$ {upsell_value:.2f}\n"
+            f"💸 Valor do downsell: R$ {valor:.2f}\n"
+            f"🏷 Desconto: {desconto}%"
         )
         
         context.user_data['conv_state'] = False
