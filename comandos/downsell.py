@@ -132,33 +132,29 @@ async def downsell_valor(update: Update, context: ContextTypes.DEFAULT_TYPE):
             await update.message.reply_text("⛔ O valor deve ser maior que zero:", reply_markup=cancel_markup)
             return DOWNSELL_VALOR
         
-        # Verifica se é menor que o upsell
-        upsell_config = manager.get_bot_upsell(context.bot_data['id'])
-        upsell_value = upsell_config.get('value', 0)
-        
-        if valor >= upsell_value:
-            await update.message.reply_text(
-                f"⚠️ O downsell deve ser menor que o upsell!\n"
-                f"Upsell: R$ {upsell_value}\n"
-                f"Tente um valor menor:",
-                reply_markup=cancel_markup
-            )
-            return DOWNSELL_VALOR
-        
         context.user_data['downsell_context']['value'] = valor
         
         # Salva o downsell
         downsell_data = context.user_data['downsell_context']
         manager.update_bot_downsell(context.bot_data['id'], downsell_data)
         
-        desconto = int(((upsell_value - valor) / upsell_value) * 100)
+        # Pega o valor do upsell para calcular desconto
+        upsell_config = manager.get_bot_upsell(context.bot_data['id'])
+        upsell_value = upsell_config.get('value', 0)
         
-        await update.message.reply_text(
+        # Monta a mensagem base
+        mensagem = (
             f"✅ 𝗗𝗼𝘄𝗻𝘀𝗲𝗹𝗹 𝗰𝗼𝗻𝗳𝗶𝗴𝘂𝗿𝗮𝗱𝗼!\n\n"
             f"💰 Valor do upsell: R$ {upsell_value:.2f}\n"
-            f"💸 Valor do downsell: R$ {valor:.2f}\n"
-            f"🏷 Desconto: {desconto}%"
+            f"💸 Valor do downsell: R$ {valor:.2f}"
         )
+        
+        # Adiciona desconto apenas se o downsell for menor que o upsell
+        if valor < upsell_value:
+            desconto = int(((upsell_value - valor) / upsell_value) * 100)
+            mensagem += f"\n🏷 Desconto: {desconto}%"
+        
+        await update.message.reply_text(mensagem)
         
         context.user_data['conv_state'] = False
         return ConversationHandler.END
