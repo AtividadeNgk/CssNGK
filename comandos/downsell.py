@@ -9,7 +9,7 @@ from modules.utils import process_command, is_admin, cancel, error_callback
 DOWNSELL_ESCOLHA, DOWNSELL_RECEBER, DOWNSELL_VALOR = range(3)
 
 keyboardc = [
-    [InlineKeyboardButton("❌ CANCELAR", callback_data="cancelar")]
+    [InlineKeyboardButton("❌ Cancelar", callback_data="cancelar")]
 ]
 cancel_markup = InlineKeyboardMarkup(keyboardc)
 
