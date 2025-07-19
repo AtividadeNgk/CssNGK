@@ -106,7 +106,7 @@ async def disparo_escolha(update: Update, context: CallbackContext):
         markup_plans = InlineKeyboardMarkup(keyboard_plans)
         await query.message.edit_text("💎 Qual plano você deseja disparar:", reply_markup=markup_plans, parse_mode='MarkdownV2')
         return DISPARO_PLANO
-
+        
 async def disparo_plano(update: Update, context: CallbackContext):
     query = update.callback_query
     await query.answer()
