@@ -43,7 +43,12 @@ async def orderbump(update: Update, context: ContextTypes.DEFAULT_TYPE):
     keyboard.append([InlineKeyboardButton("❌ CANCELAR", callback_data="cancelar")])
     
     reply_markup = InlineKeyboardMarkup(keyboard)
-    await update.message.reply_text("💰 Qual ação deseja fazer com os Order Bumps?", reply_markup=reply_markup)
+    await update.message.reply_text(
+        "🛍 O que deseja fazer com o Order Bump?\n\n"
+        ">𝗖𝗼𝗺𝗼 𝗳𝘂𝗻𝗰𝗶𝗼𝗻𝗮\\? Após o cliente escolher um plano, aparece uma oferta adicional que pode ser incluída na mesma compra\\.",
+        reply_markup=reply_markup,
+        parse_mode='MarkdownV2'
+    )
     return ORDERBUMP_ESCOLHA
 
 async def orderbump_escolha(update: Update, context: CallbackContext):
@@ -124,8 +129,7 @@ async def orderbump_plano(update: Update, context: CallbackContext):
     }
     
     await query.message.edit_text(
-        "💰 Envie o texto junto com a mídia para o Order Bump\n"
-        "> Esta será a oferta adicional mostrada ao cliente",
+        "📝 Envie a mensagem para o Order Bump, pode conter mídia.",
         reply_markup=cancel_markup
     )
     return ORDERBUMP_MENSAGEM
@@ -170,8 +174,7 @@ async def orderbump_mensagem(update: Update, context: ContextTypes.DEFAULT_TYPE)
         context.user_data['orderbump_context']['text'] = save['text']
         
         await update.message.reply_text(
-            "💰 Agora, selecione qual o valor do seu Order Bump\n"
-            "> Este valor será somado ao valor do plano",
+            "💰 Agora, envie qual será o valor do seu Order Bump.",
             reply_markup=cancel_markup
         )
         return ORDERBUMP_VALOR
@@ -209,14 +212,12 @@ async def orderbump_valor(update: Update, context: ContextTypes.DEFAULT_TYPE):
         valor_total = round(plano['value'] + valor, 2)
         
         await update.message.reply_text(
-            f"💰 Confirme o Order Bump:\n\n"
-            f"📦 Plano: {escape_markdown_v2(plano['name'])}\n"
-            f"💵 Valor do plano: R$ {escape_markdown_v2(str(plano['value']))}\n"
-            f"➕ Valor do Order Bump: R$ {escape_markdown_v2(str(valor))}\n"
-            f"💰 Valor total se aceitar: R$ {escape_markdown_v2(str(valor_total))}\n\n"
-            f"Deseja criar este Order Bump?",
-            reply_markup=reply_markup,
-            parse_mode='MarkdownV2'
+            f"🛍 𝗖𝗼𝗻𝗳𝗶𝗿𝗺𝗲 𝗼 𝗢𝗿𝗱𝗲𝗿 𝗕𝘂𝗺𝗽\n\n"
+            f"📦 Plano: {plano['name']}\n"
+            f" ↳ Valor: R$ {plano['value']:.2f}\n"
+            f"🎁 Order Bump: R$ {valor:.2f}\n"
+            f" ↳ Total: R$ {valor_total:.2f}",
+            reply_markup=reply_markup
         )
         return ORDERBUMP_CONFIRMAR
         
