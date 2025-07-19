@@ -74,18 +74,18 @@ async def disparo_escolha(update: Update, context: CallbackContext):
         reply_markup = InlineKeyboardMarkup(keyboard)
         
         # Mostra disparos existentes
-        msg = "📅 DISPAROS PROGRAMADOS:\n\n"
+        msg = "📆 𝗗𝗶𝘀𝗽𝗮𝗿𝗼𝘀 𝗽𝗿𝗼𝗴𝗿𝗮𝗺𝗮𝗱𝗼𝘀\n\n"
         if broadcasts:
             for b in broadcasts:
-                msg += f"• Disparo {b['id']+1}: {b['time']} - {b['discount']}% OFF\n"
+                msg += f"➛ Disparo {b['id']+1}: {b['time']} - {b['discount']}% OFF\n"
         else:
-            msg += "Nenhum disparo programado ainda.\n"
+            msg += "➛ Nenhum disparo programado ainda.\n"
         
         # Adiciona aviso se já tem 3
         if len(broadcasts) >= 3:
             msg += "\n⚠️ Limite máximo de 3 disparos atingido.\n"
         
-        msg += "\nO que deseja fazer?"
+        msg += "\nO que você deseja fazer?"
         
         await query.message.edit_text(msg, reply_markup=reply_markup)
         return DISPARO_PROGRAMADO_ESCOLHA
@@ -232,9 +232,11 @@ async def disparo_mensagem(update: Update, context: ContextTypes.DEFAULT_TYPE):
             context.user_data['disparo_programado']['text'] = save['text']
             
             await update.message.reply_text(
-                "💸 Qual desconto (%) deseja aplicar em todos os planos?\n"
-                "Digite apenas o número (ex: 10 para 10%)",
-                reply_markup=cancel_markup
+                "🏷 Qual desconto \\(\\%\\) deseja aplicar\\?\n\n"
+                ">𝗖𝗼𝗺𝗼 𝗳𝘂𝗻𝗰𝗶𝗼𝗻𝗮\\? O desconto será aplicado em todos os planos do bot que será listados abaixo da mensagem de disparo\\.\n\n"
+                "— Digite apenas o número \\(Ex\\: 15 para 15\\% de desconto\\)",
+                reply_markup=cancel_markup,
+                parse_mode='MarkdownV2'
             )
             return DISPARO_PROGRAMADO_DESCONTO
         
@@ -460,8 +462,7 @@ async def disparo_programado_escolha(update: Update, context: CallbackContext):
         }
         
         await query.message.edit_text(
-            "📅 NOVO DISPARO PROGRAMADO\n\n"
-            "Envie a mensagem que será disparada (pode conter mídia):",
+            "💬 Envie a mensagem que será disparada, pode conter mídia.",
             reply_markup=cancel_markup
         )
         return DISPARO_MENSAGEM
@@ -520,7 +521,7 @@ async def disparo_programado_desconto(update: Update, context: ContextTypes.DEFA
         context.user_data['disparo_programado']['discount'] = desconto
         
         await update.message.reply_text(
-            "⏰ Agora envie o horário para o disparo diário.\n"
+            "⏰ Agora, envie o horário para o disparo diário.\n"
             "Formato: HH:MM (exemplo: 20:00)",
             reply_markup=cancel_markup
         )
@@ -558,12 +559,13 @@ async def disparo_programado_horario(update: Update, context: ContextTypes.DEFAU
     reply_markup = InlineKeyboardMarkup(keyboard)
     
     await update.message.reply_text(
-        f"📅 CONFIRME O DISPARO PROGRAMADO:\n\n"
-        f"⏰ Horário: {config['time']} (Horário de Brasília - todos os dias)\n"
-        f"💸 Desconto: {config['discount']}%\n"
-        f"📝 Mensagem configurada\n\n"
-        f"Deseja criar este disparo?",
-        reply_markup=reply_markup
+        f"📆 𝗣𝗿𝗼𝗻𝘁𝗼 𝗽𝗮𝗿𝗮 𝗰𝗿𝗶𝗮𝗿 𝗼 𝗱𝗶𝘀𝗽𝗮𝗿𝗼\\?\n\n"
+        f">⏰ Horário\\: {escape_markdown_v2(config['time'])}\n"
+        f">🏷 Desconto\\: {escape_markdown_v2(str(config['discount']))}\\%\n"
+        f">📝 Mensagem configurada\n\n"
+        f"— Horário de Brasília\\.",
+        reply_markup=reply_markup,
+        parse_mode='MarkdownV2'
     )
     return DISPARO_PROGRAMADO_CONFIRMA
 
