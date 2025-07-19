@@ -35,7 +35,12 @@ async def disparo(update: Update, context: ContextTypes.DEFAULT_TYPE):
     ]
 
     reply_markup = InlineKeyboardMarkup(keyboard)
-    await update.message.reply_text("🛠️ Qual tipo de disparo deseja realizar?", reply_markup=reply_markup)
+    await update.message.reply_text(
+        "🚀 𝗖𝗲𝗻𝘁𝗿𝗮𝗹 𝗱𝗲 𝗗𝗶𝘀𝗽𝗮𝗿𝗼 𝗡𝗚𝗞 \\- Qual tipo de disparo deseja realizar?\n\n"
+        ">𝗖𝗼𝗺𝗼 𝗳𝘂𝗻𝗰𝗶𝗼𝗻𝗮\\? Envie mensagem para todos os usuários que acessaram o bot\\. Você pode enviar promoções, avisos e muito mais\\.",
+        reply_markup=reply_markup,
+        parse_mode='MarkdownV2'
+    )
     return DISPARO_TIPO
 
 async def disparo_escolha(update: Update, context: CallbackContext):
@@ -86,7 +91,12 @@ async def disparo_escolha(update: Update, context: CallbackContext):
         return DISPARO_PROGRAMADO_ESCOLHA
     elif query.data == 'livre':
         context.user_data['disparo_payload']['tipo'] = 'livre'
-        await query.message.edit_text("💎 Envie o link para enviar no disparo:", reply_markup=reply_markup)
+        await query.message.edit_text(
+            "🔗 Envie o link que deseja para o disparo\\.\n\n"
+            ">𝗖𝗼𝗺𝗼 𝗳𝘂𝗻𝗰𝗶𝗼𝗻𝗮\\? Esse link será acoplado em um botão abaixo da sua mensagem\\. Quando clicado, o usuário é redirecionado para ele\\.",
+            reply_markup=reply_markup,
+            parse_mode='MarkdownV2'
+        )
         return DISPARO_LINK
     elif query.data == 'plano':
         context.user_data['disparo_payload']['tipo'] = 'plano'
@@ -135,7 +145,10 @@ async def disparo_valor_confirma(update: Update, context: CallbackContext):
         await query.message.edit_text("Qual valor você deseja inserir no disparo:", reply_markup=cancel_markup)
         return DISPARO_VALOR
     elif query.data == 'nao':
-        await query.message.edit_text("Envie a mensagem que deseja enviar no disparo:\n>Pode conter midia", reply_markup=cancel_markup)
+        await query.message.edit_text(
+            "💬 Envie a mensagem para o Disparo, pode conter mídia.",
+            reply_markup=cancel_markup
+        )
         return DISPARO_MENSAGEM
     else:
         await query.message.edit_text("⛔ Erro ao identificar ação, Todos os comandos cancelados")
@@ -155,7 +168,10 @@ async def disparo_valor(update: Update, context: ContextTypes.DEFAULT_TYPE):
             await update.message.reply_text("⛔ O valor deve ser positivo e maior que 4:", reply_markup=cancel_markup)
             return DISPARO_VALOR
         context.user_data['disparo_payload']['plano']['value'] = valor
-        await update.message.reply_text("Envie a mensagem que deseja enviar no disparo:\n>Pode conter midia", reply_markup=cancel_markup)
+        await update.message.reply_text(
+            "💬 Envie a mensagem para o Disparo, pode conter mídia.",
+            reply_markup=cancel_markup
+        )
         return DISPARO_MENSAGEM
     except Exception as e:
         print(e)
@@ -176,9 +192,11 @@ async def disparo_link(update: Update, context: ContextTypes.DEFAULT_TYPE):
         return DISPARO_LINK
     
     context.user_data['disparo_payload']['link'] = link_recebido
-    await update.message.reply_text("Envie a mensagem que deseja enviar no disparo:\n>Pode conter midia", reply_markup=cancel_markup)
+    await update.message.reply_text(
+        "💬 Envie a mensagem para o Disparo, pode conter mídia.",
+        reply_markup=cancel_markup
+    )
     return DISPARO_MENSAGEM
-
 async def disparo_mensagem(update: Update, context: ContextTypes.DEFAULT_TYPE):
     try:
         save = {
@@ -229,7 +247,10 @@ async def disparo_mensagem(update: Update, context: ContextTypes.DEFAULT_TYPE):
         context.user_data['disparo_payload']['mensagem'] = save
         
         if disparo.get('tipo', False) == 'livre':
-            await update.message.reply_text(f"Confirme o disparo\:", reply_markup=reply_markup)
+            await update.message.reply_text(
+                "🚀 𝗣𝗿𝗼𝗻𝘁𝗼 𝗽𝗮𝗿𝗮 𝗱𝗶𝘀𝗽𝗮𝗿𝗮𝗿?",
+                reply_markup=reply_markup
+            )
             return DISPARO_CONFIRMA
         elif disparo.get('tipo', False) == 'plano':
             plano = disparo.get('plano', False)
@@ -253,9 +274,23 @@ async def disparo_mensagem(update: Update, context: ContextTypes.DEFAULT_TYPE):
                     'eterno': ''
                 }
             if plano['time_type'] != 'eterno':
-                await update.message.reply_text(f"Confirme o disparo\:\n>Nome\: {escape_markdown_v2(plano['name'])}\n>Tempo\: {escape_markdown_v2(plano['time'])} {names[plano['time_type']]}\n>Valor\: {escape_markdown_v2(str(plano['value']))}", parse_mode='MarkdownV2', reply_markup=reply_markup)
+                await update.message.reply_text(
+                    f"🚀 𝗣𝗿𝗼𝗻𝘁𝗼 𝗽𝗮𝗿𝗮 𝗱𝗶𝘀𝗽𝗮𝗿𝗮𝗿?\n\n"
+                    f">Nome\\: {escape_markdown_v2(plano['name'])}\n"
+                    f">Tempo\\: {escape_markdown_v2(str(plano['time']))} {names[plano['time_type']]}\n"
+                    f">Valor\\: R\\$ {escape_markdown_v2(str(plano['value']))}",
+                    parse_mode='MarkdownV2',
+                    reply_markup=reply_markup
+                )
             else:
-                await update.message.reply_text(f"Confirme o disparo\:\n>Nome\: {escape_markdown_v2(plano['name'])}\n>Tempo\: Vitalicio\n>Valor\: {escape_markdown_v2(str(plano['value']))}", parse_mode='MarkdownV2', reply_markup=reply_markup)
+                await update.message.reply_text(
+                    f"🚀 𝗣𝗿𝗼𝗻𝘁𝗼 𝗽𝗮𝗿𝗮 𝗱𝗶𝘀𝗽𝗮𝗿𝗮𝗿?\n\n"
+                    f">Nome\\: {escape_markdown_v2(plano['name'])}\n"
+                    f">Tempo\\: Vitalício\n"
+                    f">Valor\\: R\\$ {escape_markdown_v2(str(plano['value']))}",
+                    parse_mode='MarkdownV2',
+                    reply_markup=reply_markup
+                )
             return DISPARO_CONFIRMA
         else:
             await update.message.reply_text(text="⛔ Erro ao identificar tipo de disparo", parse_mode='MarkdownV2')
