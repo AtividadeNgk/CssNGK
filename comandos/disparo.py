@@ -92,8 +92,10 @@ async def disparo_escolha(update: Update, context: CallbackContext):
     elif query.data == 'livre':
         context.user_data['disparo_payload']['tipo'] = 'livre'
         await query.message.edit_text(
-            "💬 Envie a mensagem para o Disparo, pode conter mídia.",
-            reply_markup=reply_markup
+            "💬 Envie a mensagem para o Disparo, pode conter mídia\\.\n\n"
+            ">𝗖𝗼𝗺𝗼 𝗳𝘂𝗻𝗰𝗶𝗼𝗻𝗮\\? Envie mensagem para todos os usuários que acessaram o bot\\. Você pode enviar promoções, avisos e muito mais\\.",
+            reply_markup=reply_markup,
+            parse_mode='MarkdownV2'
         )
         return DISPARO_MENSAGEM
     elif query.data == 'plano':
@@ -186,7 +188,17 @@ async def disparo_link(update: Update, context: ContextTypes.DEFAULT_TYPE):
     reply_markup = InlineKeyboardMarkup(keyboard)
 
     if not check_link(link_recebido):
-        await update.message.reply_text("❌ Insira um link valido:", reply_markup=reply_markup)
+        await update.message.reply_text(
+            "⛔️ Insira um link válido\\.\n\n"
+            "📌 Exemplos de links válidos\\:\n"
+            "• https\\://exemplo\\.com\n"
+            "• http\\://site\\.com\\.br\n"
+            "• t\\.me/seucanal\n"
+            "• https\\://t\\.me/seugrupo\n\n"
+            "⚠️ O link deve começar com http\\://, https\\:// ou t\\.me/",
+            reply_markup=reply_markup,
+            parse_mode='MarkdownV2'
+        )
         return DISPARO_LINK
     
     context.user_data['disparo_payload']['link'] = link_recebido
@@ -252,7 +264,7 @@ async def disparo_mensagem(update: Update, context: ContextTypes.DEFAULT_TYPE):
         if disparo.get('tipo', False) == 'livre':
             # AGORA PEDE O LINK DEPOIS DA MENSAGEM
             await update.message.reply_text(
-                "🔗 Envie o link que deseja para o disparo\\.\n\n"
+                "🔗 Envie o link que deseja adicionar no botão do disparo\\.\n\n"
                 ">𝗖𝗼𝗺𝗼 𝗳𝘂𝗻𝗰𝗶𝗼𝗻𝗮\\? Esse link será acoplado em um botão abaixo da sua mensagem\\. Quando clicado, o usuário é redirecionado para ele\\.",
                 reply_markup=cancel_markup,
                 parse_mode='MarkdownV2'
