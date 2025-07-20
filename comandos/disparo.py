@@ -46,7 +46,7 @@ async def disparo(update: Update, context: ContextTypes.DEFAULT_TYPE):
 async def disparo_escolha(update: Update, context: CallbackContext):
     query = update.callback_query
     await query.answer()
-    keyboard = [[InlineKeyboardButton("❌ Cancelar", callback_data="cancelar")]]
+    keyboard = [[InlineKeyboardButton("❌ CANCELAR", callback_data="cancelar")]]
     reply_markup = InlineKeyboardMarkup(keyboard)
     context.user_data['disparo_payload'] = {
         'tipo': False
@@ -67,9 +67,9 @@ async def disparo_escolha(update: Update, context: CallbackContext):
         
         # Sempre mostra remover se tiver algum disparo
         if len(broadcasts) > 0:
-            keyboard.append([InlineKeyboardButton("🧹 𝗥𝗲𝗺𝗼𝘃𝗲𝗿", callback_data="prog_remover")])
+            keyboard.append([InlineKeyboardButton("➖ REMOVER", callback_data="prog_remover")])
         
-        keyboard.append([InlineKeyboardButton("❌ Cancelar", callback_data="cancelar")])
+        keyboard.append([InlineKeyboardButton("❌ CANCELAR", callback_data="cancelar")])
         
         reply_markup = InlineKeyboardMarkup(keyboard)
         
@@ -101,12 +101,28 @@ async def disparo_escolha(update: Update, context: CallbackContext):
     elif query.data == 'plano':
         context.user_data['disparo_payload']['tipo'] = 'plano'
         planos = manager.get_bot_plans(context.bot_data['id'])
+        
+        # Verifica se existem planos
+        if len(planos) == 0:
+            await query.message.edit_text(
+                "⛔ Nenhum plano cadastrado!\n\n"
+                "💡 Use o comando /planos para criar seus planos antes de fazer um disparo."
+            )
+            context.user_data['conv_state'] = False
+            return ConversationHandler.END
+        
         keyboard_plans = []
         for plan_index in range(len(planos)):
             keyboard_plans.append([InlineKeyboardButton(f'{planos[plan_index]['name']} - R$ {planos[plan_index]['value']}', callback_data=f"planod_{plan_index}")])
-        keyboard_plans.append([InlineKeyboardButton("❌ Cancelar", callback_data="cancelar")])
+        keyboard_plans.append([InlineKeyboardButton("❌ CANCELAR", callback_data="cancelar")])
         markup_plans = InlineKeyboardMarkup(keyboard_plans)
-        await query.message.edit_text("💎 Qual plano você deseja disparar:", reply_markup=markup_plans, parse_mode='MarkdownV2')
+        
+        await query.message.edit_text(
+            "💰 Qual plano você deseja usar no disparo?\n\n"
+            ">𝗖𝗼𝗺𝗼 𝗳𝘂𝗻𝗰𝗶𝗼𝗻𝗮\\? Envie ofertas de planos específicos para todos os usuários\\. Escolha o plano, defina o valor \\(opcional\\) e a mensagem\\.",
+            reply_markup=markup_plans,
+            parse_mode='MarkdownV2'
+        )
         return DISPARO_PLANO
         
 async def disparo_plano(update: Update, context: CallbackContext):
@@ -142,7 +158,10 @@ async def disparo_valor_confirma(update: Update, context: CallbackContext):
         await cancel(update, context)
         return ConversationHandler.END
     elif query.data == 'sim':
-        await query.message.edit_text("Qual valor você deseja inserir no disparo:", reply_markup=cancel_markup)
+        await query.message.edit_text(
+            "💰 Qual valor você deseja aplicar no plano?",
+            reply_markup=cancel_markup
+        )
         return DISPARO_VALOR
     elif query.data == 'nao':
         await query.message.edit_text(
