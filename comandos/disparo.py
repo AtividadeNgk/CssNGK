@@ -335,6 +335,15 @@ async def disparo_confirma(update: Update, context: CallbackContext):
         users = manager.get_bot_users(context.bot_data['id'])
         total_users = len(users)
         
+        # Verifica se há usuários para disparar
+        if total_users == 0:
+            await query.message.edit_text(
+                "⚠️ Não há usuários cadastrados no bot para realizar o disparo.\n\n"
+                "💡 Os usuários são adicionados automaticamente quando dão /start no seu bot."
+            )
+            context.user_data['conv_state'] = False
+            return ConversationHandler.END
+        
         # Mensagem inicial
         message = await context.bot.send_message(
             query.from_user.id, 
@@ -432,12 +441,15 @@ async def disparo_confirma(update: Update, context: CallbackContext):
                     # Ignora erros ao atualizar mensagem
                     pass
         
+        # Calcula porcentagem apenas se houver usuários
+        porcentagem_sucesso = int(enviados/total_users*100) if total_users > 0 else 0
+        
         # Mensagem final com resumo
         await message.edit_text(
             f'✅ 𝗗𝗜𝗦𝗣𝗔𝗥𝗢 𝗙𝗜𝗡𝗔𝗟𝗜𝗭𝗔𝗗𝗢!\n\n'
             f'📊 Resumo:\n'
             f'👤 Total: {total_users} usuários\n'
-            f'✅ Enviados: {enviados} ({int(enviados/total_users*100)}%)\n'
+            f'✅ Enviados: {enviados} ({porcentagem_sucesso}%)\n'
             f'⛔ Erros: {erros}\n'
             f'🚫 Bloqueados: {bloqueados}\n'
             f'💤 Inativos: {inativos}'
