@@ -203,7 +203,7 @@ async def disparo_link(update: Update, context: ContextTypes.DEFAULT_TYPE):
         return DISPARO_LINK
     
     link_recebido = update.message.text.strip()
-    keyboard = [[InlineKeyboardButton("❌ Cancelar", callback_data="cancelar")]]
+    keyboard = [[InlineKeyboardButton("❌ CANCELAR", callback_data="cancelar")]]
     reply_markup = InlineKeyboardMarkup(keyboard)
 
     if not check_link(link_recebido):
@@ -222,10 +222,11 @@ async def disparo_link(update: Update, context: ContextTypes.DEFAULT_TYPE):
     
     context.user_data['disparo_payload']['link'] = link_recebido
     
-    # AGORA VAI DIRETO PARA CONFIRMAR
-    keyboard = [[
-        InlineKeyboardButton("✅ CONFIRMAR", callback_data="confirmar"),
-        InlineKeyboardButton("❌ Cancelar", callback_data="cancelar")]]
+    # MUDANÇA: Botões um em cima do outro
+    keyboard = [
+        [InlineKeyboardButton("✅ CONFIRMAR", callback_data="confirmar")],
+        [InlineKeyboardButton("❌ CANCELAR", callback_data="cancelar")]
+    ]
     reply_markup = InlineKeyboardMarkup(keyboard)
     
     await update.message.reply_text(
@@ -233,6 +234,7 @@ async def disparo_link(update: Update, context: ContextTypes.DEFAULT_TYPE):
         reply_markup=reply_markup
     )
     return DISPARO_CONFIRMA
+    
 async def disparo_mensagem(update: Update, context: ContextTypes.DEFAULT_TYPE):
     try:
         save = {
@@ -277,11 +279,16 @@ async def disparo_mensagem(update: Update, context: ContextTypes.DEFAULT_TYPE):
             return DISPARO_PROGRAMADO_DESCONTO
         
         # Continua com o fluxo normal
+        # MUDANÇA: Botões um em cima do outro
+        keyboard = [
+            [InlineKeyboardButton("✅ CONFIRMAR", callback_data="confirmar")],
+            [InlineKeyboardButton("❌ CANCELAR", callback_data="cancelar")]
+        ]
+        reply_markup = InlineKeyboardMarkup(keyboard)
         disparo = context.user_data['disparo_payload']
         context.user_data['disparo_payload']['mensagem'] = save
         
         if disparo.get('tipo', False) == 'livre':
-            # AGORA PEDE O LINK DEPOIS DA MENSAGEM
             await update.message.reply_text(
                 "🔗 Envie o link que deseja adicionar no botão do disparo\\.\n\n"
                 ">𝗖𝗼𝗺𝗼 𝗳𝘂𝗻𝗰𝗶𝗼𝗻𝗮\\? Esse link será acoplado em um botão abaixo da sua mensagem\\. Quando clicado, o usuário é redirecionado para ele\\.",
@@ -290,10 +297,6 @@ async def disparo_mensagem(update: Update, context: ContextTypes.DEFAULT_TYPE):
             )
             return DISPARO_LINK
         elif disparo.get('tipo', False) == 'plano':
-            keyboard = [[
-                InlineKeyboardButton("✅ CONFIRMAR", callback_data="confirmar"),
-                InlineKeyboardButton("❌ Cancelar", callback_data="cancelar")]]
-            reply_markup = InlineKeyboardMarkup(keyboard)
             plano = disparo.get('plano', False)
             if not plano:
                 await update.message.reply_text(text="⛔ Erro ao identificar plano de disparo", parse_mode='MarkdownV2')
