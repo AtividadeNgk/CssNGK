@@ -249,9 +249,9 @@ async def disparo_mensagem(update: Update, context: ContextTypes.DEFAULT_TYPE):
             context.user_data['disparo_programado']['text'] = save['text']
             
             await update.message.reply_text(
-                "🏷 Qual desconto \\(\\%\\) deseja aplicar\\?\n\n"
+                "🏷 Deseja aplicar algum desconto\\?\n\n"
                 ">𝗖𝗼𝗺𝗼 𝗳𝘂𝗻𝗰𝗶𝗼𝗻𝗮\\? O desconto será aplicado em todos os planos do bot que será listados abaixo da mensagem de disparo\\.\n\n"
-                "— Digite apenas o número \\(Ex\\: 15 para 15\\% de desconto\\)",
+                "— Digite apenas o número \\(Ex\\: 15 para 15\\% ou 0 se não quiser desconto\\)",
                 reply_markup=cancel_markup,
                 parse_mode='MarkdownV2'
             )
@@ -482,8 +482,10 @@ async def disparo_programado_escolha(update: Update, context: CallbackContext):
         }
         
         await query.message.edit_text(
-            "💬 Envie a mensagem que será disparada, pode conter mídia.",
-            reply_markup=cancel_markup
+            "💬 Envie a mensagem que será disparada, pode conter mídia\\.\n\n"
+            ">𝗖𝗼𝗺𝗼 𝗳𝘂𝗻𝗰𝗶𝗼𝗻𝗮\\? Crie campanhas automáticas que disparam todo dia no horário definido\\. Aplica descontos em todos os planos do seu bot automaticamente\\.",
+            reply_markup=cancel_markup,
+            parse_mode='MarkdownV2'
         )
         return DISPARO_MENSAGEM
     
