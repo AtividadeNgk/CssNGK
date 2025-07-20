@@ -12,7 +12,7 @@ from modules.actions import send_disparo
 DISPARO_TIPO, DISPARO_MENSAGEM, DISPARO_VALOR_CONFIRMA, DISPARO_VALOR, DISPARO_PLANO, DISPARO_LINK, DISPARO_CONFIRMA, DISPARO_PROGRAMADO_ESCOLHA, DISPARO_PROGRAMADO_DESCONTO, DISPARO_PROGRAMADO_HORARIO, DISPARO_PROGRAMADO_CONFIRMA, DISPARO_PROGRAMADO_REMOVER = range(12)
 
 keyboardc = [
-    [InlineKeyboardButton("❌ CANCELAR", callback_data="cancelar")]
+    [InlineKeyboardButton("❌ Cancelar", callback_data="cancelar")]
 ]
 cancel_markup = InlineKeyboardMarkup(keyboardc)
 
@@ -31,7 +31,7 @@ async def disparo(update: Update, context: ContextTypes.DEFAULT_TYPE):
     keyboard = [
         [InlineKeyboardButton("Livre", callback_data="livre"), InlineKeyboardButton("Plano", callback_data="plano")],
         [InlineKeyboardButton("Programado", callback_data="programado")],
-        [InlineKeyboardButton("❌ CANCELAR", callback_data="cancelar")]
+        [InlineKeyboardButton("❌ Cancelar", callback_data="cancelar")]
     ]
 
     reply_markup = InlineKeyboardMarkup(keyboard)
@@ -46,7 +46,7 @@ async def disparo(update: Update, context: ContextTypes.DEFAULT_TYPE):
 async def disparo_escolha(update: Update, context: CallbackContext):
     query = update.callback_query
     await query.answer()
-    keyboard = [[InlineKeyboardButton("❌ CANCELAR", callback_data="cancelar")]]
+    keyboard = [[InlineKeyboardButton("❌ Cancelar", callback_data="cancelar")]]
     reply_markup = InlineKeyboardMarkup(keyboard)
     context.user_data['disparo_payload'] = {
         'tipo': False
@@ -67,9 +67,9 @@ async def disparo_escolha(update: Update, context: CallbackContext):
         
         # Sempre mostra remover se tiver algum disparo
         if len(broadcasts) > 0:
-            keyboard.append([InlineKeyboardButton("➖ REMOVER", callback_data="prog_remover")])
+            keyboard.append([InlineKeyboardButton("🧹 𝗥𝗲𝗺𝗼𝘃𝗲𝗿", callback_data="prog_remover")])
         
-        keyboard.append([InlineKeyboardButton("❌ CANCELAR", callback_data="cancelar")])
+        keyboard.append([InlineKeyboardButton("❌ Cancelar", callback_data="cancelar")])
         
         reply_markup = InlineKeyboardMarkup(keyboard)
         
@@ -104,7 +104,7 @@ async def disparo_escolha(update: Update, context: CallbackContext):
         keyboard_plans = []
         for plan_index in range(len(planos)):
             keyboard_plans.append([InlineKeyboardButton(f'{planos[plan_index]['name']} - R$ {planos[plan_index]['value']}', callback_data=f"planod_{plan_index}")])
-        keyboard_plans.append([InlineKeyboardButton("❌ CANCELAR", callback_data="cancelar")])
+        keyboard_plans.append([InlineKeyboardButton("❌ Cancelar", callback_data="cancelar")])
         markup_plans = InlineKeyboardMarkup(keyboard_plans)
         await query.message.edit_text("💎 Qual plano você deseja disparar:", reply_markup=markup_plans, parse_mode='MarkdownV2')
         return DISPARO_PLANO
@@ -124,7 +124,7 @@ async def disparo_plano(update: Update, context: CallbackContext):
         context.user_data['disparo_payload']['plano'] = plano
         keyboard = [
             [InlineKeyboardButton("Sim", callback_data="sim"), InlineKeyboardButton("Não", callback_data="nao")],
-            [InlineKeyboardButton("❌ CANCELAR", callback_data="cancelar")]
+            [InlineKeyboardButton("❌ Cancelar", callback_data="cancelar")]
         ]
         reply_markup = InlineKeyboardMarkup(keyboard)
         await query.message.edit_text(f"Deseja inserir um valor diferente para o plano?", reply_markup=reply_markup)
@@ -184,7 +184,7 @@ async def disparo_link(update: Update, context: ContextTypes.DEFAULT_TYPE):
         return DISPARO_LINK
     
     link_recebido = update.message.text.strip()
-    keyboard = [[InlineKeyboardButton("❌ CANCELAR", callback_data="cancelar")]]
+    keyboard = [[InlineKeyboardButton("❌ Cancelar", callback_data="cancelar")]]
     reply_markup = InlineKeyboardMarkup(keyboard)
 
     if not check_link(link_recebido):
@@ -206,7 +206,7 @@ async def disparo_link(update: Update, context: ContextTypes.DEFAULT_TYPE):
     # AGORA VAI DIRETO PARA CONFIRMAR
     keyboard = [[
         InlineKeyboardButton("✅ CONFIRMAR", callback_data="confirmar"),
-        InlineKeyboardButton("❌ CANCELAR", callback_data="cancelar")]]
+        InlineKeyboardButton("❌ Cancelar", callback_data="cancelar")]]
     reply_markup = InlineKeyboardMarkup(keyboard)
     
     await update.message.reply_text(
@@ -273,7 +273,7 @@ async def disparo_mensagem(update: Update, context: ContextTypes.DEFAULT_TYPE):
         elif disparo.get('tipo', False) == 'plano':
             keyboard = [[
                 InlineKeyboardButton("✅ CONFIRMAR", callback_data="confirmar"),
-                InlineKeyboardButton("❌ CANCELAR", callback_data="cancelar")]]
+                InlineKeyboardButton("❌ Cancelar", callback_data="cancelar")]]
             reply_markup = InlineKeyboardMarkup(keyboard)
             plano = disparo.get('plano', False)
             if not plano:
@@ -501,7 +501,7 @@ async def disparo_programado_escolha(update: Update, context: CallbackContext):
                 )
             ])
         
-        keyboard.append([InlineKeyboardButton("❌ CANCELAR", callback_data="cancelar")])
+        keyboard.append([InlineKeyboardButton("❌ Cancelar", callback_data="cancelar")])
         reply_markup = InlineKeyboardMarkup(keyboard)
         
         await query.message.edit_text(
