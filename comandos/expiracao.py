@@ -20,8 +20,8 @@ async def adeus(update: Update, context: ContextTypes.DEFAULT_TYPE):
     context.user_data['conv_state'] = "adeus"
 
     keyboard = [
-            [InlineKeyboardButton("➕ ADICIONAR", callback_data="adicionar"), InlineKeyboardButton("➖ REMOVER", callback_data="remover")],
-            [InlineKeyboardButton("❌ CANCELAR", callback_data="cancelar")]]
+            [InlineKeyboardButton("Adicionar", callback_data="adicionar"), InlineKeyboardButton("Remover", callback_data="remover")],
+            [InlineKeyboardButton("❌ Cancelar", callback_data="cancelar")]]
     
     reply_markup = InlineKeyboardMarkup(keyboard)
 
@@ -40,7 +40,7 @@ async def adeus_escolha(update: Update, context: CallbackContext):
         await cancel(update, context)
         return ConversationHandler.END
     elif query.data == 'adicionar':
-        keyboard = [[InlineKeyboardButton("❌ CANCELAR", callback_data="cancelar")]]
+        keyboard = [[InlineKeyboardButton("❌ Cancelar", callback_data="cancelar")]]
         reply_markup = InlineKeyboardMarkup(keyboard)
         await query.message.edit_text(
             "💬 Envie a mensagem de expiração, pode conter mídia.",
@@ -117,7 +117,7 @@ async def adeus_receber_mensagem(update: Update, context: ContextTypes.DEFAULT_T
         # Pergunta se confirma
         keyboard = [
             [InlineKeyboardButton("✅ CONFIRMAR", callback_data="confirmar_exp")],
-            [InlineKeyboardButton("❌ CANCELAR", callback_data="cancelar")]
+            [InlineKeyboardButton("❌ Cancelar", callback_data="cancelar")]
         ]
         reply_markup = InlineKeyboardMarkup(keyboard)
         
