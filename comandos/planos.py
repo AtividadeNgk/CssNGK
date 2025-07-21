@@ -26,11 +26,11 @@ async def planos(update: Update, context: ContextTypes.DEFAULT_TYPE):
     plan_list = manager.get_bot_plans(context.bot_data['id'])
     if len(plan_list) > 0:
         keyboard = [
-            [InlineKeyboardButton("Adicionar", callback_data="adicionar"), InlineKeyboardButton("Remover", callback_data="remover")],
+            [InlineKeyboardButton("🟢 Adicionar", callback_data="adicionar"), InlineKeyboardButton("🧹 Remover", callback_data="remover")],
             [InlineKeyboardButton("❌ Cancelar", callback_data="cancelar")]]
     else:
         keyboard = [
-            [InlineKeyboardButton("Adicionar", callback_data="adicionar")],
+            [InlineKeyboardButton("🟢 Adicionar", callback_data="adicionar")],
             [InlineKeyboardButton("❌ Cancelar", callback_data="cancelar")]]
     
     reply_markup = InlineKeyboardMarkup(keyboard)
