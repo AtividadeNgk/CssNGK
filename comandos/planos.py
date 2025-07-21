@@ -67,7 +67,7 @@ async def planos_escolha(update: Update, context: CallbackContext):
             keyboard_plans.append([InlineKeyboardButton(planos[plan_index]['name'], callback_data=f"planor_{plan_index}")])
         keyboard_plans.append([InlineKeyboardButton("❌ Cancelar", callback_data="cancelar")])
         markup_plans = InlineKeyboardMarkup(keyboard_plans)
-        await query.message.edit_text("🗑 Qual plano você deseja remover?", reply_markup=markup_plans, parse_mode='MarkdownV2')
+        await query.message.edit_text("🧹 Qual plano você deseja remover?", reply_markup=markup_plans, parse_mode='MarkdownV2')
         return PLANOS_DELETAR
 
 async def planos_deletar(update: Update, context: CallbackContext):
@@ -145,7 +145,7 @@ async def plano_tempo(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await update.message.reply_text(text=f"⛔ Formato inválido. Por favor, envie apenas números")
         return PLANOS_TEMPO
     try:
-        keyboard = [[InlineKeyboardButton("❌ CANCELAR", callback_data="cancelar")]]
+        keyboard = [[InlineKeyboardButton("❌ Cancelar", callback_data="cancelar")]]
         reply_markup = InlineKeyboardMarkup(keyboard)
         tempo = int(update.message.text)
         if tempo < 0:
