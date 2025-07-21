@@ -62,7 +62,7 @@ async def admin_escolha(update: Update, context: CallbackContext):
         
         for i in admins:
             admin = await context.bot.get_chat(i)
-            keyboard.append([InlineKeyboardButton(admin['username'], callback_data=i)])
+            keyboard.append([InlineKeyboardButton(admin.username or admin.first_name or 'Usuário', callback_data=i)])
         keyboard.append([InlineKeyboardButton("❌ CANCELAR", callback_data="cancelar")])
         reply_markup = InlineKeyboardMarkup(keyboard)
         await query.message.edit_text("🛡️ Qual admin deseja remover:", reply_markup=reply_markup)
@@ -98,7 +98,8 @@ async def recebe_admin(update: Update, context: ContextTypes.DEFAULT_TYPE):
         reply_markup = InlineKeyboardMarkup(keyboard)
         context.user_data['admin_payload'] = id_recebido
         
-        username = f"@{admin_chat['username']}" if admin_chat.get('username') else admin_chat.get('first_name', 'Usuário')
+        # CORREÇÃO: Acessar atributos do objeto Chat corretamente
+        username = f"@{admin_chat.username}" if admin_chat.username else admin_chat.first_name or 'Usuário'
         
         await update.message.reply_text(
             f"🧑‍💻 Você tem certeza que deseja adicionar {escape_markdown_v2(username)} como administrador?\n\n"
