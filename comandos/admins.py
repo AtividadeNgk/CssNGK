@@ -24,15 +24,20 @@ async def admin(update: Update, context: ContextTypes.DEFAULT_TYPE):
     admin_list = manager.get_bot_admin(context.bot_data['id'])
     if len(admin_list) > 0:
         keyboard = [
-            [InlineKeyboardButton("➕ ADICIONAR", callback_data="adicionar"), InlineKeyboardButton("➖ REMOVER", callback_data="remover")],
+            [InlineKeyboardButton("🟢 Adicionar", callback_data="adicionar"), InlineKeyboardButton("➖ REMOVER", callback_data="remover")],
             [InlineKeyboardButton("❌ CANCELAR", callback_data="cancelar")]]
     else:
         keyboard = [
-            [InlineKeyboardButton("➕ ADICIONAR", callback_data="adicionar")],
+            [InlineKeyboardButton("🟢 Adicionar", callback_data="adicionar")],
             [InlineKeyboardButton("❌ CANCELAR", callback_data="cancelar")]]
     
     reply_markup = InlineKeyboardMarkup(keyboard)
-    await update.message.reply_text("🛡️ Qual ação deseja fazer com os admins:", reply_markup=reply_markup)
+    await update.message.reply_text(
+        "👤 O que deseja fazer com os administradores?\n\n"
+        ">𝗖𝗼𝗺𝗼 𝗳𝘂𝗻𝗰𝗶𝗼𝗻𝗮\\? Adicione uma pessoa de confiança para ser administrador do seu bot, ela poderá controlar e alterar absolutamente tudo\\.",
+        reply_markup=reply_markup,
+        parse_mode='MarkdownV2'
+    )
     return ADMIN_ESCOLHA
 
 
@@ -46,7 +51,10 @@ async def admin_escolha(update: Update, context: CallbackContext):
     elif query.data == 'adicionar':
         keyboard = [[InlineKeyboardButton("❌ CANCELAR", callback_data="cancelar")]]
         reply_markup = InlineKeyboardMarkup(keyboard)
-        await query.message.edit_text("🛡️ Envie o id do admin que deseja adicionar\:\n> Adicione pessoas de confiança apenas, não nos responsabilizamos por problemas com admins", reply_markup=reply_markup, parse_mode='MarkdownV2')
+        await query.message.edit_text(
+            "👤 Envie o ID do usuário que deseja adicionar como administrador.",
+            reply_markup=reply_markup
+        )
         return ADMIN_RECEBER
     elif query.data == 'remover':
         admins = manager.get_bot_admin(context.bot_data['id'])
@@ -89,7 +97,15 @@ async def recebe_admin(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
         reply_markup = InlineKeyboardMarkup(keyboard)
         context.user_data['admin_payload'] = id_recebido
-        await update.message.reply_text(text=f"🛡️ Tem certeza que quer adicionar *{admin_chat['username']}*\n\n>Não nos responsabilizamos por ações tomadas por administradores, irregularidades por parte de adminstradores causam punição para o dono do bot",reply_markup=reply_markup, parse_mode='MarkdownV2')
+        
+        username = f"@{admin_chat['username']}" if admin_chat.get('username') else admin_chat.get('first_name', 'Usuário')
+        
+        await update.message.reply_text(
+            f"🧑‍💻 Você tem certeza que deseja adicionar {escape_markdown_v2(username)} como administrador?\n\n"
+            f">𝗔𝘃𝗶𝘀𝗼\\: Não nos responsabilizamos por qualquer atitude ou ação tomada pelos administradores\\.",
+            reply_markup=reply_markup,
+            parse_mode='MarkdownV2'
+        )
         return ADMIN_CONFIRMAR
     else:
         keyboard = [[InlineKeyboardButton("❌ CANCELAR", callback_data="cancelar")]]
