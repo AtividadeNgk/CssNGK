@@ -224,7 +224,7 @@ async def send_expiration(context, user_id):
     config = manager.get_bot_expiration(context.bot_data['id'])
     if not config.get('text', False) or not config.get('media', False):
         return
-    reply_markup = InlineKeyboardMarkup([[InlineKeyboardButton(text='RENOVAR ASSINATURA', callback_data='acessar_ofertas')]])
+    reply_markup = InlineKeyboardMarkup([[InlineKeyboardButton(text='♻️ 𝗥𝗲𝗻𝗼𝘃𝗮𝗿 𝗔𝘀𝘀𝗶𝗻𝗮𝘁𝘂𝗿𝗮', callback_data='acessar_ofertas')]])
     if config.get('media', False):
         if config.get('text', False):
             if config['media'].get('type') == 'photo':
