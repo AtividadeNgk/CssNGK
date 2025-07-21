@@ -146,7 +146,7 @@ async def disparo_plano(update: Update, context: CallbackContext):
             [InlineKeyboardButton("❌ Cancelar", callback_data="cancelar")]
         ]
         reply_markup = InlineKeyboardMarkup(keyboard)
-        await query.message.edit_text(f"Deseja inserir um valor diferente para o plano?", reply_markup=reply_markup)
+        await query.message.edit_text(f"🤑 Deseja aplicar um valor diferente para o plano?", reply_markup=reply_markup)
         return DISPARO_VALOR_CONFIRMA
     except:
         await query.message.edit_text("⛔ Erro ao identificar ação, Todos os comandos cancelados")
@@ -656,7 +656,7 @@ async def disparo_programado_desconto(update: Update, context: ContextTypes.DEFA
         context.user_data['disparo_programado']['discount'] = desconto
         
         await update.message.reply_text(
-            "⏰ Agora, envie o horário para o disparo diário.\n"
+            "⏰ Agora, envie o horário para o disparo diário.\n\n"
             "Formato: HH:MM (exemplo: 20:00)",
             reply_markup=cancel_markup
         )
