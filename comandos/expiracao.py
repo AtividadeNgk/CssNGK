@@ -20,7 +20,7 @@ async def adeus(update: Update, context: ContextTypes.DEFAULT_TYPE):
     context.user_data['conv_state'] = "adeus"
 
     keyboard = [
-            [InlineKeyboardButton("Adicionar", callback_data="adicionar"), InlineKeyboardButton("Remover", callback_data="remover")],
+            [InlineKeyboardButton("🟢 Adicionar", callback_data="adicionar"), InlineKeyboardButton("🧹 Remover", callback_data="remover")],
             [InlineKeyboardButton("❌ Cancelar", callback_data="cancelar")]]
     
     reply_markup = InlineKeyboardMarkup(keyboard)
