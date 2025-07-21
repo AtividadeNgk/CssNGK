@@ -9,7 +9,7 @@ from telegram.error import BadRequest, Forbidden, TelegramError, RetryAfter
 from modules.utils import process_command, is_admin, cancel, error_callback, error_message, escape_markdown_v2, check_link
 from modules.actions import send_disparo
 
-DISPARO_TIPO, DISPARO_MENSAGEM, DISPARO_VALOR_CONFIRMA, DISPARO_VALOR, DISPARO_PLANO, DISPARO_LINK, DISPARO_CONFIRMA, DISPARO_PROGRAMADO_ESCOLHA, DISPARO_PROGRAMADO_DESCONTO, DISPARO_PROGRAMADO_HORARIO, DISPARO_PROGRAMADO_CONFIRMA, DISPARO_PROGRAMADO_REMOVER = range(12)
+DISPARO_TIPO, DISPARO_MENSAGEM, DISPARO_BOTAO, DISPARO_VALOR_CONFIRMA, DISPARO_VALOR, DISPARO_PLANO, DISPARO_LINK, DISPARO_CONFIRMA, DISPARO_PROGRAMADO_ESCOLHA, DISPARO_PROGRAMADO_DESCONTO, DISPARO_PROGRAMADO_HORARIO, DISPARO_PROGRAMADO_CONFIRMA, DISPARO_PROGRAMADO_REMOVER = range(13)
 
 keyboardc = [
     [InlineKeyboardButton("❌ Cancelar", callback_data="cancelar")]
@@ -225,7 +225,40 @@ async def disparo_link(update: Update, context: ContextTypes.DEFAULT_TYPE):
     
     context.user_data['disparo_payload']['link'] = link_recebido
     
-    # MUDANÇA: Botões um em cima do outro
+    # Envia prévia do disparo
+    await update.message.reply_text("👁 𝗣𝗿𝗲́𝘃𝗶𝗮 𝗱𝗼 𝗱𝗶𝘀𝗽𝗮𝗿𝗼:")
+    
+    # Monta e envia a mensagem de prévia
+    mensagem_data = context.user_data['disparo_payload']['mensagem']
+    botao_texto = context.user_data['disparo_payload']['botao_texto']
+    
+    # Cria o botão com o link
+    keyboard_preview = [[InlineKeyboardButton(botao_texto, url=link_recebido)]]
+    reply_markup_preview = InlineKeyboardMarkup(keyboard_preview)
+    
+    # Envia a prévia baseado no tipo de conteúdo
+    if mensagem_data['media']:
+        if mensagem_data['media']['type'] == 'photo':
+            await context.bot.send_photo(
+                chat_id=update.effective_chat.id,
+                photo=mensagem_data['media']['file'],
+                caption=mensagem_data['text'] if mensagem_data['text'] else None,
+                reply_markup=reply_markup_preview
+            )
+        elif mensagem_data['media']['type'] == 'video':
+            await context.bot.send_video(
+                chat_id=update.effective_chat.id,
+                video=mensagem_data['media']['file'],
+                caption=mensagem_data['text'] if mensagem_data['text'] else None,
+                reply_markup=reply_markup_preview
+            )
+    else:
+        await update.message.reply_text(
+            mensagem_data['text'],
+            reply_markup=reply_markup_preview
+        )
+    
+    # Pergunta se confirma
     keyboard = [
         [InlineKeyboardButton("✅ CONFIRMAR", callback_data="confirmar")],
         [InlineKeyboardButton("❌ CANCELAR", callback_data="cancelar")]
@@ -233,7 +266,8 @@ async def disparo_link(update: Update, context: ContextTypes.DEFAULT_TYPE):
     reply_markup = InlineKeyboardMarkup(keyboard)
     
     await update.message.reply_text(
-        "🚀 𝗣𝗿𝗼𝗻𝘁𝗼 𝗽𝗮𝗿𝗮 𝗱𝗶𝘀𝗽𝗮𝗿𝗮𝗿?",
+        "🚀 𝗣𝗿𝗼𝗻𝘁𝗼 𝗽𝗮𝗿𝗮 𝗱𝗶𝘀𝗽𝗮𝗿𝗮𝗿?\n\n"
+        "É assim que todos receberão a mensagem.",
         reply_markup=reply_markup
     )
     return DISPARO_CONFIRMA
@@ -282,24 +316,28 @@ async def disparo_mensagem(update: Update, context: ContextTypes.DEFAULT_TYPE):
             return DISPARO_PROGRAMADO_DESCONTO
         
         # Continua com o fluxo normal
-        # MUDANÇA: Botões um em cima do outro
-        keyboard = [
-            [InlineKeyboardButton("✅ CONFIRMAR", callback_data="confirmar")],
-            [InlineKeyboardButton("❌ CANCELAR", callback_data="cancelar")]
-        ]
-        reply_markup = InlineKeyboardMarkup(keyboard)
         disparo = context.user_data['disparo_payload']
         context.user_data['disparo_payload']['mensagem'] = save
         
         if disparo.get('tipo', False) == 'livre':
+            # NOVO: Agora pede o texto do botão
             await update.message.reply_text(
-                "🔗 Envie o link que deseja adicionar no botão do disparo\\.\n\n"
-                ">𝗖𝗼𝗺𝗼 𝗳𝘂𝗻𝗰𝗶𝗼𝗻𝗮\\? Esse link será acoplado em um botão abaixo da sua mensagem\\. Quando clicado, o usuário é redirecionado para ele\\.",
+                "🔤 Agora envie o texto que aparecerá no botão\\.\n\n"
+                "💡 Exemplos\\: \n"
+                "• QUERO DESCONTO\n"
+                "• ACESSAR AGORA\n"
+                "• VER OFERTA\n"
+                "• SAIBA MAIS",
                 reply_markup=cancel_markup,
                 parse_mode='MarkdownV2'
             )
-            return DISPARO_LINK
+            return DISPARO_BOTAO
         elif disparo.get('tipo', False) == 'plano':
+            keyboard = [
+                [InlineKeyboardButton("✅ CONFIRMAR", callback_data="confirmar")],
+                [InlineKeyboardButton("❌ CANCELAR", callback_data="cancelar")]
+            ]
+            reply_markup = InlineKeyboardMarkup(keyboard)
             plano = disparo.get('plano', False)
             if not plano:
                 await update.message.reply_text(text="⛔ Erro ao identificar plano de disparo", parse_mode='MarkdownV2')
@@ -348,6 +386,41 @@ async def disparo_mensagem(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await update.message.reply_text(text=f"⛔ Erro ao receber mensagem de disparo {str(e)}")
         context.user_data['conv_state'] = False
         return ConversationHandler.END
+
+async def disparo_botao(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    if not update.message.text:
+        await update.message.reply_text("⛔ Por favor, envie apenas texto para o botão:", reply_markup=cancel_markup)
+        return DISPARO_BOTAO
+    
+    texto_botao = update.message.text.strip()
+    
+    # Validações
+    if len(texto_botao) > 30:
+        await update.message.reply_text(
+            "⛔ Texto muito longo! O botão deve ter no máximo 30 caracteres.\n"
+            "Tente algo mais curto:",
+            reply_markup=cancel_markup
+        )
+        return DISPARO_BOTAO
+    
+    if len(texto_botao) < 2:
+        await update.message.reply_text(
+            "⛔ Texto muito curto! O botão deve ter pelo menos 2 caracteres.",
+            reply_markup=cancel_markup
+        )
+        return DISPARO_BOTAO
+    
+    # Salva o texto do botão
+    context.user_data['disparo_payload']['botao_texto'] = texto_botao
+    
+    # Pede o link
+    await update.message.reply_text(
+        "🔗 Envie o link que deseja adicionar no botão\\.\n\n"
+        ">𝗖𝗼𝗺𝗼 𝗳𝘂𝗻𝗰𝗶𝗼𝗻𝗮\\? Esse link será aberto quando o usuário clicar no botão\\.",
+        reply_markup=cancel_markup,
+        parse_mode='MarkdownV2'
+    )
+    return DISPARO_LINK
 
 async def disparo_confirma(update: Update, context: CallbackContext):
     query = update.callback_query
@@ -669,6 +742,7 @@ conv_handler_disparo = ConversationHandler(
         DISPARO_VALOR_CONFIRMA: [CallbackQueryHandler(disparo_valor_confirma)],
         DISPARO_VALOR: [MessageHandler(~filters.COMMAND, disparo_valor), CallbackQueryHandler(cancel)],
         DISPARO_MENSAGEM: [MessageHandler(~filters.COMMAND, disparo_mensagem), CallbackQueryHandler(cancel)],
+        DISPARO_BOTAO: [MessageHandler(~filters.COMMAND, disparo_botao), CallbackQueryHandler(cancel)],  # NOVO
         DISPARO_LINK: [MessageHandler(~filters.COMMAND, disparo_link), CallbackQueryHandler(cancel)],
         DISPARO_CONFIRMA: [CallbackQueryHandler(disparo_confirma)],
         DISPARO_PROGRAMADO_ESCOLHA: [CallbackQueryHandler(disparo_programado_escolha)],
