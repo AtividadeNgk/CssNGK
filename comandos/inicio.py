@@ -69,7 +69,7 @@ async def inicio_escolha(update: Update, context: CallbackContext):
         return INICIO_RECEBER
 
     keyboard = [
-        [InlineKeyboardButton("Adicionar", callback_data="adicionar"), InlineKeyboardButton("Remover", callback_data="deletar")],
+        [InlineKeyboardButton("🟢 Adicionar", callback_data="adicionar"), InlineKeyboardButton("🧹 Remover", callback_data="deletar")],
         [InlineKeyboardButton("❌ Cancelar", callback_data="cancelar")]
     ]
 
