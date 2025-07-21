@@ -21,7 +21,9 @@ async def send_disparo(context, user_id, config):
                 [InlineKeyboardButton('💠 Pagar via PIX 💠', callback_data=f'exibir_{payment_id}')]
             ]
         elif config['tipo'] == "livre":
-            keyboard = [[InlineKeyboardButton('Acessar Conteúdo', url=config['link'])]]
+            # MUDANÇA: Usa o texto personalizado do botão ou o padrão
+            texto_botao = config.get('botao_texto', 'Acessar Conteúdo')
+            keyboard = [[InlineKeyboardButton(texto_botao, url=config['link'])]]
             
         reply_markup=InlineKeyboardMarkup(keyboard)
         
@@ -43,10 +45,8 @@ async def send_disparo(context, user_id, config):
             await context.bot.send_message(chat_id=user_id, text=config['mensagem']['text'], reply_markup=reply_markup)
     except Exception as e:
         print(e)
-
         return False
     return True
-
 def send_payment():
     pass
 #{"media": {"file": "AgACAgEAAxkBAAIDbWehTomUmGO9g5rzT8InVQwfQnQAA2mvMRtsPghFk70HYXbW_0wBAAMCAAN5AAM2BA", "type": "photo"}, "text": "Xibiu", "link": false, "value": 9.99}
