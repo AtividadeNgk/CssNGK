@@ -82,7 +82,7 @@ async def planos_deletar(update: Update, context: CallbackContext):
         planos = manager.get_bot_plans(context.bot_data['id'])
         planos.pop(plano_index)
         manager.update_bot_plans(context.bot_data['id'] ,planos)
-        await query.message.edit_text("✅ Plano deletado com sucesso")
+        await query.message.edit_text("✅ Plano removido com sucesso!")
     except:
         await query.message.edit_text("⛔ Erro ao identificar ação, Todos os comandos cancelados")
     finally:
@@ -149,14 +149,14 @@ async def plano_tempo(update: Update, context: ContextTypes.DEFAULT_TYPE):
         reply_markup = InlineKeyboardMarkup(keyboard)
         tempo = int(update.message.text)
         if tempo < 0:
-            await update.message.reply_text("⛔ O tempo deve ser positivo:", reply_markup=reply_markup)
+            await update.message.reply_text("⛔ O tempo deve ser positivo.", reply_markup=reply_markup)
             return PLANOS_TEMPO
         
         context.user_data['plan_context']['time'] = tempo
         await update.message.reply_text("💰 Envie o valor do plano.", reply_markup=reply_markup)
         return PLANOS_VALOR
     except:
-        await update.message.reply_text("⛔ Envie um tempo válido:", reply_markup=reply_markup)
+        await update.message.reply_text("⛔ Envie um tempo válido.", reply_markup=reply_markup)
         return PLANOS_TEMPO
 
 async def plano_valor(update: Update, context: ContextTypes.DEFAULT_TYPE):
