@@ -65,7 +65,7 @@ async def admin_escolha(update: Update, context: CallbackContext):
             keyboard.append([InlineKeyboardButton(admin.username or admin.first_name or 'Usuário', callback_data=i)])
         keyboard.append([InlineKeyboardButton("❌ CANCELAR", callback_data="cancelar")])
         reply_markup = InlineKeyboardMarkup(keyboard)
-        await query.message.edit_text("🛡️ Qual admin deseja remover:", reply_markup=reply_markup)
+        await query.message.edit_text("🧹 Qual administrador deseja remover?", reply_markup=reply_markup)
         return ADMIN_REMOVER
 
 
