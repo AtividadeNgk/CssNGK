@@ -43,8 +43,7 @@ async def adeus_escolha(update: Update, context: CallbackContext):
         keyboard = [[InlineKeyboardButton("❌ CANCELAR", callback_data="cancelar")]]
         reply_markup = InlineKeyboardMarkup(keyboard)
         await query.message.edit_text(
-            "⏳ Envie como deseja a mensagem de expiração:\n"
-            "Pode conter mídia",
+            "💬 Envie a mensagem de expiração, pode conter mídia.",
             reply_markup=reply_markup
         )
         return EXPIRACAO_RECEBER
