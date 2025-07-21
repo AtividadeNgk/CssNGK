@@ -25,7 +25,12 @@ async def adeus(update: Update, context: ContextTypes.DEFAULT_TYPE):
     
     reply_markup = InlineKeyboardMarkup(keyboard)
 
-    await update.message.reply_text("⏳ Qual ação deseja fazer com a mensagem de expiração:", reply_markup=reply_markup)
+    await update.message.reply_text(
+        "⏳ O que deseja fazer com a mensagem de expiração?\n\n"
+        ">𝗖𝗼𝗺𝗼 𝗳𝘂𝗻𝗰𝗶𝗼𝗻𝗮\\? Defina a mensagem que o cliente vai receber após o plano dele vencer\\. Abaixo da mensagem definida, aparecerá um botão para renovar a assinatura\\.",
+        reply_markup=reply_markup,
+        parse_mode='MarkdownV2'
+    )
     return EXPIRACAO_ESCOLHA
 
 async def adeus_escolha(update: Update, context: CallbackContext):
@@ -37,7 +42,11 @@ async def adeus_escolha(update: Update, context: CallbackContext):
     elif query.data == 'adicionar':
         keyboard = [[InlineKeyboardButton("❌ CANCELAR", callback_data="cancelar")]]
         reply_markup = InlineKeyboardMarkup(keyboard)
-        await query.message.edit_text("⏳ Envie como deseja a mensagem de expiração\:\n> Pode conter midia", reply_markup=reply_markup, parse_mode='MarkdownV2')
+        await query.message.edit_text(
+            "⏳ Envie como deseja a mensagem de expiração:\n"
+            "Pode conter mídia",
+            reply_markup=reply_markup
+        )
         return EXPIRACAO_RECEBER
     elif query.data == 'remover':
         manager.update_bot_expiration(context.bot_data['id'], {}) 
@@ -76,30 +85,46 @@ async def adeus_receber_mensagem(update: Update, context: ContextTypes.DEFAULT_T
         # Salva temporariamente no contexto
         context.user_data['expiracao_temp'] = save
         
-        # Monta a mensagem de confirmação
+        # Envia prévia da mensagem
+        await update.message.reply_text("👁 𝗣𝗿𝗲́𝘃𝗶𝗮 𝗱𝗮 𝗺𝗲𝗻𝘀𝗮𝗴𝗲𝗺 𝗱𝗲 𝗲𝘅𝗽𝗶𝗿𝗮𝗰̧𝗮̃𝗼:")
+        
+        # Cria o botão de renovação
+        keyboard_preview = [[InlineKeyboardButton("♻️ 𝗥𝗲𝗻𝗼𝘃𝗮𝗿 𝗔𝘀𝘀𝗶𝗻𝗮𝘁𝘂𝗿𝗮", callback_data="renovar_exemplo")]]
+        reply_markup_preview = InlineKeyboardMarkup(keyboard_preview)
+        
+        # Envia a prévia baseado no tipo de conteúdo
+        if save['media']:
+            if save['media']['type'] == 'photo':
+                await context.bot.send_photo(
+                    chat_id=update.effective_chat.id,
+                    photo=save['media']['file'],
+                    caption=save['text'] if save['text'] else None,
+                    reply_markup=reply_markup_preview
+                )
+            else:
+                await context.bot.send_video(
+                    chat_id=update.effective_chat.id,
+                    video=save['media']['file'],
+                    caption=save['text'] if save['text'] else None,
+                    reply_markup=reply_markup_preview
+                )
+        else:
+            await context.bot.send_message(
+                chat_id=update.effective_chat.id,
+                text=save['text'],
+                reply_markup=reply_markup_preview
+            )
+        
+        # Pergunta se confirma
         keyboard = [
             [InlineKeyboardButton("✅ CONFIRMAR", callback_data="confirmar_exp")],
             [InlineKeyboardButton("❌ CANCELAR", callback_data="cancelar")]
         ]
         reply_markup = InlineKeyboardMarkup(keyboard)
         
-        # Mostra prévia da mensagem
-        preview_text = "📋 **Prévia da mensagem de expiração:**\n\n"
-        
-        if save['text']:
-            preview_text += f"💬 Texto: {save['text'][:100]}{'...' if len(save.get('text', '')) > 100 else ''}\n"
-        
-        if save['media']:
-            media_type = "📷 Foto" if save['media']['type'] == 'photo' else "🎥 Vídeo"
-            preview_text += f"{media_type} anexada\n"
-        
-        preview_text += "\n🔘 Botão 'RENOVAR ASSINATURA' será adicionado automaticamente\n\n"
-        preview_text += "Deseja salvar esta mensagem de expiração?"
-        
         await update.message.reply_text(
-            text=preview_text,
-            reply_markup=reply_markup,
-            parse_mode='Markdown'
+            "Deseja salvar esta mensagem de expiração?",
+            reply_markup=reply_markup
         )
         
         return EXPIRACAO_CONFIRMAR
