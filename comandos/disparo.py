@@ -63,11 +63,11 @@ async def disparo_escolha(update: Update, context: CallbackContext):
         
         # Só mostra adicionar se tiver menos de 3
         if len(broadcasts) < 3:
-            keyboard.append([InlineKeyboardButton("➕ ADICIONAR", callback_data="prog_adicionar")])
+            keyboard.append([InlineKeyboardButton("𝗔𝗱𝗶𝗰𝗶𝗼𝗻𝗮𝗿", callback_data="prog_adicionar")])
         
         # Sempre mostra remover se tiver algum disparo
         if len(broadcasts) > 0:
-            keyboard.append([InlineKeyboardButton("➖ REMOVER", callback_data="prog_remover")])
+            keyboard.append([InlineKeyboardButton("🧹 𝗥𝗲𝗺𝗼𝘃𝗲𝗿", callback_data="prog_remover")])
         
         keyboard.append([InlineKeyboardButton("❌ CANCELAR", callback_data="cancelar")])
         
@@ -77,7 +77,10 @@ async def disparo_escolha(update: Update, context: CallbackContext):
         msg = "📆 𝗗𝗶𝘀𝗽𝗮𝗿𝗼𝘀 𝗽𝗿𝗼𝗴𝗿𝗮𝗺𝗮𝗱𝗼𝘀\n\n"
         if broadcasts:
             for b in broadcasts:
-                msg += f"➛ Disparo {b['id']+1}: {b['time']} - {b['discount']}% OFF\n"
+                # Números especiais Unicode para 1, 2, 3
+                numeros = ['𝟭', '𝟮', '𝟯']
+                numero = numeros[b['id']] if b['id'] < 3 else str(b['id']+1)
+                msg += f"𝗗𝗶𝘀𝗽𝗮𝗿𝗼 {numero} ➛ {int(b['discount'])}% (⏰ {b['time']})\n"
         else:
             msg += "➛ Nenhum disparo programado ainda.\n"
         
@@ -528,18 +531,21 @@ async def disparo_programado_escolha(update: Update, context: CallbackContext):
         keyboard = []
         
         for broadcast in broadcasts:
+            # Números especiais Unicode para 1, 2, 3
+            numeros = ['𝟭', '𝟮', '𝟯']
+            numero = numeros[broadcast['id']] if broadcast['id'] < 3 else str(broadcast['id']+1)
             keyboard.append([
                 InlineKeyboardButton(
-                    f"Disparo {broadcast['id']+1}: {broadcast['time']} - {broadcast['discount']}% OFF",
+                    f"𝗗𝗶𝘀𝗽𝗮𝗿𝗼 {numero} ➛ {int(broadcast['discount'])}% (⏰ {broadcast['time']})",
                     callback_data=f"remover_{broadcast['id']}"
                 )
             ])
         
-        keyboard.append([InlineKeyboardButton("❌ Cancelar", callback_data="cancelar")])
+        keyboard.append([InlineKeyboardButton("❌ CANCELAR", callback_data="cancelar")])
         reply_markup = InlineKeyboardMarkup(keyboard)
         
         await query.message.edit_text(
-            "📅 Qual disparo programado deseja remover?",
+            "🧹 Qual disparo programado deseja remover?",
             reply_markup=reply_markup
         )
         return DISPARO_PROGRAMADO_REMOVER
