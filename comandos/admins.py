@@ -102,10 +102,9 @@ async def recebe_admin(update: Update, context: ContextTypes.DEFAULT_TYPE):
         username = f"@{admin_chat.username}" if admin_chat.username else admin_chat.first_name or 'Usuário'
         
         await update.message.reply_text(
-            f"🧑‍💻 Você tem certeza que deseja adicionar {escape_markdown_v2(username)} como administrador?\n\n"
-            f">𝗔𝘃𝗶𝘀𝗼\\: Não nos responsabilizamos por qualquer atitude ou ação tomada pelos administradores\\.",
-            reply_markup=reply_markup,
-            parse_mode='MarkdownV2'
+            f"🧑‍💻 Você tem certeza que deseja adicionar {username} como administrador?\n\n"
+            f"𝗔𝘃𝗶𝘀𝗼: Não nos responsabilizamos por qualquer atitude ou ação tomada pelos administradores.",
+            reply_markup=reply_markup
         )
         return ADMIN_CONFIRMAR
     else:
