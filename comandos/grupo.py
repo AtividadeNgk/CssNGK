@@ -97,9 +97,9 @@ async def recebe_grupo(update: Update, context: ContextTypes.DEFAULT_TYPE):
     
     await update.message.reply_text(
         f"✅ 𝗚𝗥𝗨𝗣𝗢 𝗩𝗜𝗣 𝗗𝗘𝗙𝗜𝗡𝗜𝗗𝗢\\.\n\n"
-        f"― **Nome**: {escape_markdown_v2(nome_grupo)}\n"
-        f"― **LINK**: {escape_markdown_v2(invite_link.invite_link)}\n"
-        f"― **ID**: {escape_markdown_v2(id_grupo)}\n\n"
+        f"― *Nome*: {escape_markdown_v2(nome_grupo)}\n"
+        f"― *ID*: {escape_markdown_v2(id_grupo)}\n"
+        f"― *LINK*: {escape_markdown_v2(invite_link.invite_link)}\n\n"
         f">Agora, todos os usuários que comprarem no seu bot, receberá esse Grupo VIP\\.",
         parse_mode='MarkdownV2'
     )
