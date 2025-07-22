@@ -71,19 +71,39 @@ async def recebe_grupo(update: Update, context: ContextTypes.DEFAULT_TYPE):
         return GRUPO_RECEBER
     
     invite_link = ''
+    chat_info = None
     try:
+        chat_info = await context.bot.get_chat(id_recebido)
         invite_link = await context.bot.create_chat_invite_link(chat_id=id_recebido, member_limit=1, creates_join_request=False)
         id_grupo = id_recebido
     except:
         try:
             id_grupo = id_recebido.replace('-', '-100')
-            invite_link = await context.bot.create_chat_invite_link(chat_id=id_recebido.replace('-', '-100'), member_limit=1, creates_join_request=False)
+            chat_info = await context.bot.get_chat(id_grupo)
+            invite_link = await context.bot.create_chat_invite_link(chat_id=id_grupo, member_limit=1, creates_join_request=False)
         except:
-            await update.message.reply_text("❌ Insira um ID valido\:\n>Lembre\-se o bot tem que ter permissão de admin no grupo", reply_markup=reply_markup, parse_mode='MarkdownV2')
+            await update.message.reply_text(
+                "⛔️ ID inválido ou Bot sem permissões\\.\n\n"
+                ">⚠️ 𝗔𝗟𝗘𝗥𝗧𝗔\\: O bot precisa estar adicionado no grupo VIP com todas as permissões habilitadas\\.",
+                reply_markup=reply_markup,
+                parse_mode='MarkdownV2'
+            )
             return GRUPO_RECEBER
     
     manager.update_bot_group(context.bot_data['id'], id_grupo)
-    await update.message.reply_text(text=f"✅ ID do grupo modificado com sucesso\n\nNovo grupo\:\n> {escape_markdown_v2(invite_link.invite_link)}", parse_mode='MarkdownV2')
+    
+    # Pega o nome do grupo
+    nome_grupo = chat_info.title if chat_info else "Grupo VIP"
+    
+    await update.message.reply_text(
+        f"✅ 𝗚𝗥𝗨𝗣𝗢 𝗩𝗜𝗣 𝗗𝗘𝗙𝗜𝗡𝗜𝗗𝗢\\.\n\n"
+        f"― **Nome**: {escape_markdown_v2(nome_grupo)}\n"
+        f"― **LINK**: {escape_markdown_v2(invite_link.invite_link)}\n"
+        f"― **ID**: {escape_markdown_v2(id_grupo)}\n\n"
+        f">Agora, todos os usuários que comprarem no seu bot, receberá esse Grupo VIP\\.",
+        parse_mode='MarkdownV2'
+    )
+    
     context.user_data['conv_state'] = False
     return ConversationHandler.END
 
