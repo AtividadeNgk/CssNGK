@@ -35,7 +35,7 @@ async def grupo(update: Update, context: ContextTypes.DEFAULT_TYPE):
     
     reply_markup = InlineKeyboardMarkup(keyboard)
     await update.message.reply_text(
-        "🌟 O que desejar fazer com o Grupo VIP?\n\n"
+        "🌟 O que você desejar fazer com o Grupo VIP?\n\n"
         ">𝗖𝗼𝗺𝗼 𝗳𝘂𝗻𝗰𝗶𝗼𝗻𝗮\\? Esse comando é usado para definir o ID do seu Grupo VIP\\. Quando os clientes comprarem, receberá o link de acesso do Grupo VIP definido\\.",
         reply_markup=reply_markup,
         parse_mode='MarkdownV2'
